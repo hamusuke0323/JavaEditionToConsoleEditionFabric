@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "jece",
+  "version": "${version}",
+  "name": "JECE - Java Edition to Console Edition",
+  "description": "Make Java edition Console edition like.",
+  "authors": [
+    "hamusuke2303"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/hamusuke0323/JavaEditionToConsoleEditionFabric"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.hamusuke.jece.client.MainClient"
+    ]
+  },
+  "mixins": [
+    "jece.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}

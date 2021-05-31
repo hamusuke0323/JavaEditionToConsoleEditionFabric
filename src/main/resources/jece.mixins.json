@@ -5,7 +5,8 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
     "client.MinecraftClientMixin",
-    "client.SplashScreenMixin"
+    "client.SplashScreenMixin",
+    "client.EnchantmentMixin"
   ],
   "injectors": {
     "defaultRequire": 1

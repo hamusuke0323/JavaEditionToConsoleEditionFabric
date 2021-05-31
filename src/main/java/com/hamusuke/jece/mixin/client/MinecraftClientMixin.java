@@ -50,10 +50,10 @@ public abstract class MinecraftClientMixin implements MinecraftClientInvoker {
             SplashScreenInvoker invoker = (SplashScreenInvoker) this.overlay;
             StartupScreen.loadStartupTextures((MinecraftClient) (Object) this);
 
-            InputStream is = DefaultResourcePack.class.getResourceAsStream("/assets/" + MainClient.MOD_ID + "/sound/gamestart.ogg");
-            if (is != null) {
+            InputStream inputStream = DefaultResourcePack.class.getResourceAsStream("/assets/" + MainClient.MOD_ID + "/sound/gamestart.ogg");
+            if (inputStream != null) {
                 try {
-                    this.startupSoundPlayer = new StartupSoundPlayer(is);
+                    this.startupSoundPlayer = new StartupSoundPlayer(inputStream);
                     this.startupSoundPlayer.play();
                 } catch (IOException e) {
                     LOGGER.warn("IOException occurred in StartupSoundPlayer", e);

@@ -3,7 +3,9 @@
   "minVersion": "0.8",
   "package": "com.hamusuke.jece.mixin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": [
+  "client": [
+    "client.MinecraftClientMixin",
+    "client.SplashScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

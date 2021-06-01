@@ -7,7 +7,12 @@
     "client.MinecraftClientMixin",
     "client.SplashScreenMixin",
     "client.EnchantmentMixin",
-    "client.AbstractButtonWidgetMixin"
+    "client.AbstractButtonWidgetMixin",
+    "client.PotionUtilMixin",
+    "client.ItemStackMixin",
+    "client.ItemMixin",
+    "client.GameRendererMixin",
+    "client.InGameHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1

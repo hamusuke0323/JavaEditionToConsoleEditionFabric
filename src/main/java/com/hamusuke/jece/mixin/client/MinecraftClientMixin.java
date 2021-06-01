@@ -49,7 +49,7 @@ public abstract class MinecraftClientMixin implements MinecraftClientInvoker {
         if (MainClient.isFirst && this.overlay instanceof SplashScreen) {
             SplashScreenInvoker invoker = (SplashScreenInvoker) this.overlay;
             StartupScreen.loadStartupTextures((MinecraftClient) (Object) this);
-
+            this.setOverlay(null);
             InputStream inputStream = DefaultResourcePack.class.getResourceAsStream("/assets/" + MainClient.MOD_ID + "/sounds/gamestart.ogg");
             if (inputStream != null) {
                 try {
@@ -61,9 +61,7 @@ public abstract class MinecraftClientMixin implements MinecraftClientInvoker {
             } else {
                 LOGGER.warn("StartupSound not found, return null!");
             }
-
             this.openScreen(new StartupScreen((MinecraftClient) (Object) this, invoker.getResourceReloadMonitor(), invoker.getExceptionHandler()));
-            this.setOverlay(null);
         }
     }
 

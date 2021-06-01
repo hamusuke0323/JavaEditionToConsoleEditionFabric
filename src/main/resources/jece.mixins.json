@@ -6,7 +6,8 @@
   "client": [
     "client.MinecraftClientMixin",
     "client.SplashScreenMixin",
-    "client.EnchantmentMixin"
+    "client.EnchantmentMixin",
+    "client.AbstractButtonWidgetMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -4,7 +4,7 @@ import com.hamusuke.jece.client.MainClient;
 import com.hamusuke.jece.client.screen.StartupScreen;
 import com.hamusuke.jece.client.invoker.MinecraftClientInvoker;
 import com.hamusuke.jece.client.invoker.SplashScreenInvoker;
-import com.hamusuke.jece.client.utils.StartupSoundPlayer;
+import com.hamusuke.jece.client.util.StartupSoundPlayer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -50,7 +50,7 @@ public abstract class MinecraftClientMixin implements MinecraftClientInvoker {
             SplashScreenInvoker invoker = (SplashScreenInvoker) this.overlay;
             StartupScreen.loadStartupTextures((MinecraftClient) (Object) this);
 
-            InputStream inputStream = DefaultResourcePack.class.getResourceAsStream("/assets/" + MainClient.MOD_ID + "/sound/gamestart.ogg");
+            InputStream inputStream = DefaultResourcePack.class.getResourceAsStream("/assets/" + MainClient.MOD_ID + "/sounds/gamestart.ogg");
             if (inputStream != null) {
                 try {
                     this.startupSoundPlayer = new StartupSoundPlayer(inputStream);

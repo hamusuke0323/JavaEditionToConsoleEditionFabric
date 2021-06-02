@@ -1,7 +1,7 @@
 package com.hamusuke.jece.mixin.client;
 
 import com.hamusuke.jece.client.MainClient;
-import com.hamusuke.jece.client.screen.StartupScreen;
+import com.hamusuke.jece.client.gui.screen.StartupScreen;
 import com.hamusuke.jece.client.invoker.MinecraftClientInvoker;
 import com.hamusuke.jece.client.invoker.SplashScreenInvoker;
 import com.hamusuke.jece.client.util.StartupSoundPlayer;

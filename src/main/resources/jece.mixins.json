@@ -12,7 +12,10 @@
     "client.ItemStackMixin",
     "client.ItemMixin",
     "client.GameRendererMixin",
-    "client.InGameHudMixin"
+    "client.InGameHudMixin",
+    "client.StatusEffectTypeMixin",
+    "client.TitleScreenMixin",
+    "client.CreditsScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

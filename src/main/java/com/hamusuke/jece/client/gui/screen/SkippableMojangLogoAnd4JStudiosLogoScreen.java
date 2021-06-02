@@ -1,4 +1,4 @@
-package com.hamusuke.jece.client.screen;
+package com.hamusuke.jece.client.gui.screen;
 
 import com.hamusuke.jece.client.MainClient;
 import com.mojang.blaze3d.platform.GlStateManager;

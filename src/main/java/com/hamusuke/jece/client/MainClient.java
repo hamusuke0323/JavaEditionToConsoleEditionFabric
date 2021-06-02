@@ -3,7 +3,10 @@ package com.hamusuke.jece.client;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.Keyboard;
+import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.input.KeyboardInput;
+import net.minecraft.client.realms.KeyCombo;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -24,5 +27,6 @@ public class MainClient implements ClientModInitializer {
         Registry.register(Registry.SOUND_EVENT, UI_BUTTON_HOVER_SOUND, UI_BUTTON_HOVER);
         Registry.register(Registry.SOUND_EVENT, UI_BACKBUTTON_CLICK_SOUND, UI_BACKBUTTON_CLICK);
         Registry.register(Registry.SOUND_EVENT, UI_SLIDER_SLIDING_SOUND, UI_SLIDER_SLIDING);
+
     }
 }

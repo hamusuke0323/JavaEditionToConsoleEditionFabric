@@ -6,14 +6,24 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.BackgroundHelper;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.OrderedText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Matrix4f;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Iterator;
+import java.util.List;
 
 import static com.hamusuke.jece.client.util.CEUtil.DIALOG_WINDOW;
 
@@ -24,6 +34,15 @@ public class ScreenMixin extends DrawableHelper implements ScreenInvoker {
     @Shadow
     @Nullable
     protected MinecraftClient client;
+
+    @Shadow
+    protected TextRenderer textRenderer;
+
+    @Shadow
+    public int width;
+
+    @Shadow
+    public int height;
 
     public void renderDialogWindow(MatrixStack matrices, int x, int y, int width, int height) {
         if (width < 24 || height < 24) {
@@ -60,20 +79,20 @@ public class ScreenMixin extends DrawableHelper implements ScreenInvoker {
     }
 
     public void renderSquare(MatrixStack matrices, int x, int y, int width, int height) {
-        int i = BackgroundHelper.ColorMixer.getArgb(75, 90, 96, 240);
-        this.fillGradient(matrices, x + 1, y + 1, x + i - 1, y + height - 1, i, i);
+        int i = BackgroundHelper.ColorMixer.getArgb(240, 75, 90, 96);
+        this.fillGradient(matrices, x + 1, y + 1, x + width - 1, y + height - 1, i, i);
 
         int j = BackgroundHelper.ColorMixer.getArgb(255, 255, 255, 255);
         this.fillGradient(matrices, x, y + 1, x + 1, y + height - 1, j, j);
-        this.fillGradient(matrices, x + i - 1, y + 1, x + i, y + height - 1, j, j);
-        this.fillGradient(matrices, x + 1, y, x + i - 1, y + 1, j, j);
-        this.fillGradient(matrices, x + 1, y + height - 1, x + i - 1, y + height, j, j);
+        this.fillGradient(matrices, x + width - 1, y + 1, x + width, y + height - 1, j, j);
+        this.fillGradient(matrices, x + 1, y, x + width - 1, y + 1, j, j);
+        this.fillGradient(matrices, x + 1, y + height - 1, x + width - 1, y + height, j, j);
 
         DrawableHelperInvoker invoker = (DrawableHelperInvoker) this;
         invoker.fillGradient(matrices, x + 0.5F, y + 0.5F, x + 1.5F, y + 1.5F, j, j);
-        invoker.fillGradient(matrices, x + i - 1.5F, y + 0.5F, x + i - 0.5F, y + 1.5F, j, j);
+        invoker.fillGradient(matrices, x + width - 1.5F, y + 0.5F, x + width - 0.5F, y + 1.5F, j, j);
         invoker.fillGradient(matrices, x + 0.5F, y + height - 1.5F, x + 1.5F, y + height - 0.5F, j, j);
-        invoker.fillGradient(matrices, x + i - 1.5F, y + height - 1.5F, x + i - 0.5F, y + height - 0.5F, j, j);
+        invoker.fillGradient(matrices, x + width - 1.5F, y + height - 1.5F, x + width - 0.5F, y + height - 0.5F, j, j);
     }
 
     public void renderUpwardScrollIcon(MatrixStack matrices, int x, int y, float scale) {
@@ -92,5 +111,56 @@ public class ScreenMixin extends DrawableHelper implements ScreenInvoker {
         this.client.getTextureManager().bindTexture(CREATIVE_INVENTORY_TABS);
         this.drawTexture(matrices, 0, 0, 16, 92, 13, 7);
         RenderSystem.popMatrix();
+    }
+
+    @Inject(method = "renderOrderedTooltip", at = @At("HEAD"), cancellable = true)
+    private void renderOrderedTooltip(MatrixStack matrices, List<? extends OrderedText> lines, int x, int y, CallbackInfo ci) {
+        if (!lines.isEmpty()) {
+            int i = 0;
+            for (OrderedText orderedText : lines) {
+                int j = this.textRenderer.getWidth(orderedText);
+                if (j > i) {
+                    i = j;
+                }
+            }
+
+            int k = x + 12;
+            int l = y - 12;
+            int n = 8;
+            if (lines.size() > 1) {
+                n += 2 + (lines.size() - 1) * 10;
+            }
+
+            if (k + i > this.width) {
+                k -= 28 + i;
+            }
+
+            if (l + n + 6 > this.height) {
+                l = this.height - n - 6;
+            }
+
+            matrices.push();
+            matrices.translate(0.0D, 0.0D, 400.0D);
+            Matrix4f matrix4f = matrices.peek().getModel();
+            this.renderSquare(matrices, k - 3, l - 6, i + 6, n + 12);
+            VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
+
+            for (int s = 0; s < lines.size(); ++s) {
+                OrderedText orderedText2 = lines.get(s);
+                if (orderedText2 != null) {
+                    this.textRenderer.draw(orderedText2, (float) k, (float) l, -1, true, matrix4f, immediate, false, 0, 15728880);
+                }
+
+                if (s == 0) {
+                    l += 2;
+                }
+
+                l += 10;
+            }
+
+            immediate.draw();
+            matrices.pop();
+        }
+        ci.cancel();
     }
 }

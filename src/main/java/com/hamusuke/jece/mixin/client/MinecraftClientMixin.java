@@ -4,11 +4,13 @@ import com.hamusuke.jece.client.MainClient;
 import com.hamusuke.jece.client.gui.screen.StartupScreen;
 import com.hamusuke.jece.client.invoker.MinecraftClientInvoker;
 import com.hamusuke.jece.client.invoker.SplashScreenInvoker;
+import com.hamusuke.jece.client.util.CEUtil;
 import com.hamusuke.jece.client.util.StartupSoundPlayer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
+import net.minecraft.client.gui.RotatingCubeMapRenderer;
 import net.minecraft.client.gui.screen.Overlay;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.SplashScreen;
@@ -42,6 +44,7 @@ public abstract class MinecraftClientMixin implements MinecraftClientInvoker {
     @Final
     private static Logger LOGGER;
 
+    private RotatingCubeMapRenderer panorama;
     private StartupSoundPlayer startupSoundPlayer;
 
     @Inject(method = "<init>", at = @At(value = "TAIL"))
@@ -67,5 +70,9 @@ public abstract class MinecraftClientMixin implements MinecraftClientInvoker {
 
     public StartupSoundPlayer getPlayer() {
         return this.startupSoundPlayer;
+    }
+
+    public RotatingCubeMapRenderer getPanorama() {
+        return this.panorama = this.panorama == null ? new RotatingCubeMapRenderer(CEUtil.PANORAMA_RESOURCES_CE) : this.panorama;
     }
 }

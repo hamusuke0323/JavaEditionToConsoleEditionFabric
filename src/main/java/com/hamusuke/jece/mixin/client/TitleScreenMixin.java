@@ -1,5 +1,6 @@
 package com.hamusuke.jece.mixin.client;
 
+import com.hamusuke.jece.client.gui.screen.ConfirmScreenCE;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
@@ -9,6 +10,7 @@ import net.minecraft.client.gui.screen.multiplayer.MultiplayerWarningScreen;
 import net.minecraft.client.gui.screen.options.OptionsScreen;
 import net.minecraft.client.gui.screen.world.SelectWorldScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.Nullable;
@@ -37,29 +39,35 @@ public abstract class TitleScreenMixin extends Screen {
     @Shadow
     protected abstract void initWidgetsNormal(int y, int spacingY);
 
+    @Shadow
+    private Screen realmsNotificationGui;
+    private static boolean isDefault;
+
     private TitleScreenMixin(Text title) {
         super(title);
     }
 
     @Inject(method = "init", at = @At("HEAD"), cancellable = true)
     private void init(CallbackInfo ci) {
-        if (this.splashText == null) {
-            this.splashText = this.client.getSplashTextLoader().get();
-        }
+        if (!isDefault) {
+            if (this.splashText == null) {
+                this.splashText = this.client.getSplashTextLoader().get();
+            }
 
-        this.copyrightTextWidth = this.textRenderer.getWidth("Copyright Mojang AB. Do not distribute!");
-        this.copyrightTextX = this.width - this.copyrightTextWidth - 2;
-        int i = this.height / 4 + 48;
-        if (this.client.isDemo()) {
-            this.initWidgetsDemo(i, 24);
-        } else {
-            this.initWidgetsNormal(i, 24);
-        }
+            this.copyrightTextWidth = this.textRenderer.getWidth("Copyright Mojang AB. Do not distribute!");
+            this.copyrightTextX = this.width - this.copyrightTextWidth - 2;
+            int i = this.height / 4 + 48;
+            if (this.client.isDemo()) {
+                this.initWidgetsDemo(i, 24);
+            } else {
+                this.initWidgetsNormal(i, 24);
+            }
 
-        this.addButton(new ButtonWidget(this.width / 2 - 100, i + 72 + 12, 98, 20, new TranslatableText("menu.options"), (buttonWidget) -> this.client.openScreen(new OptionsScreen(this, this.client.options))));
-        this.addButton(new ButtonWidget(this.width / 2 + 2, i + 72 + 12, 98, 20, new TranslatableText("menu.quit"), (buttonWidget) -> this.client.scheduleStop()));
-        this.client.setConnectedToRealms(false);
-        ci.cancel();
+            this.addButton(new ButtonWidget(this.width / 2 - 100, i + 72 + 12, 98, 20, new TranslatableText("menu.options"), (buttonWidget) -> this.client.openScreen(new OptionsScreen(this, this.client.options))));
+            this.addButton(new ButtonWidget(this.width / 2 + 2, i + 72 + 12, 98, 20, new TranslatableText("menu.quit"), (buttonWidget) -> this.client.openScreen(new ConfirmScreenCE((TitleScreen) (Object) this, new TranslatableText("menu.quit"), new TranslatableText("menu.quit.message"), (b) -> this.client.openScreen((TitleScreen) (Object) this), (b) -> this.client.scheduleStop()))));
+            this.client.setConnectedToRealms(false);
+            ci.cancel();
+        }
     }
 
     @Inject(method = "initWidgetsNormal", at = @At("HEAD"), cancellable = true)
@@ -71,5 +79,12 @@ public abstract class TitleScreenMixin extends Screen {
             }
         })).active = this.client.isMultiplayerEnabled();
         ci.cancel();
+    }
+
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V"), cancellable = true)
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        if (this.client.currentScreen != this) {
+            ci.cancel();
+        }
     }
 }

@@ -13,4 +13,8 @@ public interface ScreenInvoker {
     void renderUpwardScrollIcon(MatrixStack matrices, int x, int y, float scale);
 
     void renderDownwardScrollIcon(MatrixStack matrices, int x, int y, float scale);
+
+    void renderMinecraftTitle(MatrixStack matrices, boolean renderBackground);
+
+    void renderBackgroundFillGradient(MatrixStack matrices);
 }

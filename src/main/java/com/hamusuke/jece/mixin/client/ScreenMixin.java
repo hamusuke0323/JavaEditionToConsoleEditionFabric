@@ -1,5 +1,6 @@
 package com.hamusuke.jece.mixin.client;
 
+import com.hamusuke.jece.client.MainClient;
 import com.hamusuke.jece.client.invoker.DrawableHelperInvoker;
 import com.hamusuke.jece.client.invoker.ScreenInvoker;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -22,15 +23,17 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Iterator;
 import java.util.List;
 
 import static com.hamusuke.jece.client.util.CEUtil.DIALOG_WINDOW;
 
 @Mixin(Screen.class)
 @Environment(EnvType.CLIENT)
-public class ScreenMixin extends DrawableHelper implements ScreenInvoker {
+public abstract class ScreenMixin extends DrawableHelper implements ScreenInvoker {
     private static final Identifier CREATIVE_INVENTORY_TABS = new Identifier("textures/gui/container/creative_inventory/tabs.png");
+    private static final Identifier MINECRAFT_TITLE_TEXTURES_CE = new Identifier(MainClient.MOD_ID, "textures/gui/title/minecraft.png");
+    private static final Identifier MINECRAFT_TITLE_EDITION_CE = new Identifier(MainClient.MOD_ID, "textures/gui/title/edition.png");
+
     @Shadow
     @Nullable
     protected MinecraftClient client;
@@ -43,6 +46,40 @@ public class ScreenMixin extends DrawableHelper implements ScreenInvoker {
 
     @Shadow
     public int height;
+
+    @Shadow public abstract void renderBackground(MatrixStack matrices);
+
+    @Inject(method = "renderBackground(Lnet/minecraft/client/util/math/MatrixStack;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;fillGradient(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"), cancellable = true)
+    public void renderBackground(MatrixStack matrices, int vOffset, CallbackInfo ci) {
+        ci.cancel();
+    }
+
+    public void renderBackgroundFillGradient(MatrixStack matrices) {
+        this.fillGradient(matrices, 0, 0, this.width, this.height, -1072689136, -804253680);
+    }
+
+    public void renderMinecraftTitle(MatrixStack matrices, boolean renderBackground) {
+        if (renderBackground) {
+            this.renderBackgroundFillGradient(matrices);
+            this.renderBackground(matrices);
+        }
+        int x = this.width / 2 - 73;
+        RenderSystem.pushMatrix();
+        RenderSystem.scalef(0.8F, 0.8F, 0.8F);
+        this.client.getTextureManager().bindTexture(MINECRAFT_TITLE_TEXTURES_CE);
+        RenderSystem.translatef(x, 27, 0);
+        drawTexture(matrices, 0, 0, 0, 0, 155, 44);
+        RenderSystem.translatef(155, 0, 0);
+        drawTexture(matrices, 0, 0, 0, 45, 155, 44);
+        RenderSystem.popMatrix();
+
+        RenderSystem.pushMatrix();
+        RenderSystem.scalef(0.8F, 0.8F, 0.8F);
+        this.client.getTextureManager().bindTexture(MINECRAFT_TITLE_EDITION_CE);
+        RenderSystem.translatef(x + 87, 64, 0);
+        drawTexture(matrices, 0, 0, 0.0F, 0.0F, 98, 14, 128, 16);
+        RenderSystem.popMatrix();
+    }
 
     public void renderDialogWindow(MatrixStack matrices, int x, int y, int width, int height) {
         if (width < 24 || height < 24) {

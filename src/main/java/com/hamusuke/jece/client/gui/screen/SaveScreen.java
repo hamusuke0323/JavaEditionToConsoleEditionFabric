@@ -2,6 +2,8 @@ package com.hamusuke.jece.client.gui.screen;
 
 import com.google.common.collect.Lists;
 import com.hamusuke.jece.client.invoker.ScreenInvoker;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -11,6 +13,7 @@ import net.minecraft.text.TranslatableText;
 import java.util.List;
 import java.util.function.Consumer;
 
+@Environment(EnvType.CLIENT)
 public class SaveScreen extends Screen {
     private final Screen parent;
     private final Consumer<ButtonWidget> saveAndReturnToMenu;

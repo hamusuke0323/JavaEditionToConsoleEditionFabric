@@ -108,6 +108,14 @@ public class StartupScreen extends Screen {
         return false;
     }
 
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        return false;
+    }
+
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        return false;
+    }
+
     static class StartupTextures extends ResourceTexture {
         private final Identifier location;
 

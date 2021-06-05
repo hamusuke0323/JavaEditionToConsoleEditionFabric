@@ -73,6 +73,10 @@ public abstract class MinecraftClientMixin implements MinecraftClientInvoker {
     }
 
     public RotatingCubeMapRenderer getPanorama() {
-        return this.panorama = this.panorama == null ? new RotatingCubeMapRenderer(CEUtil.PANORAMA_RESOURCES_CE) : this.panorama;
+        if (this.panorama == null) {
+            this.panorama = new RotatingCubeMapRenderer(CEUtil.PANORAMA_RESOURCES_CE);
+        }
+
+        return this.panorama;
     }
 }

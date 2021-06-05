@@ -1,6 +1,7 @@
 package com.hamusuke.jece.mixin.client;
 
 import com.hamusuke.jece.client.MainClient;
+import com.hamusuke.jece.client.gui.screen.SelectDefaultsScreen;
 import com.hamusuke.jece.client.invoker.DrawableHelperInvoker;
 import com.hamusuke.jece.client.invoker.ScreenInvoker;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -22,6 +23,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
@@ -47,7 +49,8 @@ public abstract class ScreenMixin extends DrawableHelper implements ScreenInvoke
     @Shadow
     public int height;
 
-    @Shadow public abstract void renderBackground(MatrixStack matrices);
+    @Shadow
+    public abstract void renderBackground(MatrixStack matrices);
 
     @Inject(method = "renderBackground(Lnet/minecraft/client/util/math/MatrixStack;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;fillGradient(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"), cancellable = true)
     public void renderBackground(MatrixStack matrices, int vOffset, CallbackInfo ci) {
@@ -199,5 +202,13 @@ public abstract class ScreenMixin extends DrawableHelper implements ScreenInvoke
             matrices.pop();
         }
         ci.cancel();
+    }
+
+    @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
+    private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        if (MainClient.OPEN_DEFAULT_CE_SWITCHER_SCREEN.matchesKey(keyCode, scanCode) && !(this.client.currentScreen instanceof SelectDefaultsScreen)) {
+            this.client.openScreen(new SelectDefaultsScreen(this.client.currentScreen));
+            cir.cancel();
+        }
     }
 }

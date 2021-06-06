@@ -1,7 +1,7 @@
 package com.hamusuke.jece.mixin.client;
 
 import com.hamusuke.jece.client.MainClient;
-import com.hamusuke.jece.client.gui.screen.SelectDefaultsScreen;
+import com.hamusuke.jece.client.gui.screen.JECESwitcherScreen;
 import com.hamusuke.jece.client.invoker.DrawableHelperInvoker;
 import com.hamusuke.jece.client.invoker.ScreenInvoker;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -206,8 +206,8 @@ public abstract class ScreenMixin extends DrawableHelper implements ScreenInvoke
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (MainClient.OPEN_DEFAULT_CE_SWITCHER_SCREEN.matchesKey(keyCode, scanCode) && !(this.client.currentScreen instanceof SelectDefaultsScreen)) {
-            this.client.openScreen(new SelectDefaultsScreen(this.client.currentScreen));
+        if (MainClient.OPEN_DEFAULT_CE_SWITCHER_SCREEN.matchesKey(keyCode, scanCode) && !(this.client.currentScreen instanceof JECESwitcherScreen)) {
+            this.client.openScreen(new JECESwitcherScreen(this.client.currentScreen));
             cir.cancel();
         }
     }

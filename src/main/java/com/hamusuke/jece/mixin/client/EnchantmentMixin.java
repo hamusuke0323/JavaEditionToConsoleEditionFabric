@@ -1,7 +1,6 @@
 package com.hamusuke.jece.mixin.client;
 
-import com.hamusuke.jece.client.defaultcomparator.DefaultComparator;
-import com.hamusuke.jece.client.defaultcomparator.DefaultComparators;
+import com.hamusuke.jece.client.jececomparator.JECEComparators;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.enchantment.Enchantment;
@@ -26,7 +25,7 @@ public abstract class EnchantmentMixin {
 
     @Inject(method = "getName", at = @At("HEAD"), cancellable = true)
     public void getName(int level, CallbackInfoReturnable<Text> cir) {
-        if (!DefaultComparators.ENCHANTMENT_DEFAULT.get()) {
+        if (!JECEComparators.JECEStorage.ENCHANTMENT_BOOLEAN.get()) {
             MutableText mutableText = new TranslatableText(this.getTranslationKey());
             if (this.isCursed()) {
                 mutableText.formatted(Formatting.RED);

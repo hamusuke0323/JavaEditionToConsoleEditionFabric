@@ -1,7 +1,7 @@
 package com.hamusuke.jece.mixin.client;
 
 import com.hamusuke.jece.client.MainClient;
-import com.hamusuke.jece.client.defaultcomparator.DefaultComparators;
+import com.hamusuke.jece.client.jececomparator.JECEComparators;
 import com.hamusuke.jece.client.gui.screen.ConfirmScreenCE;
 import com.hamusuke.jece.client.invoker.MinecraftClientInvoker;
 import com.hamusuke.jece.client.invoker.ScreenInvoker;
@@ -57,7 +57,7 @@ public abstract class TitleScreenMixin extends Screen {
 
     @Inject(method = "init", at = @At("HEAD"), cancellable = true)
     private void init(CallbackInfo ci) {
-        if (!DefaultComparators.TITLE_SCREEN_DEFAULT.get()) {
+        if (!JECEComparators.JECEStorage.TITLE_SCREEN_BOOLEAN.get()) {
             if (this.splashText == null) {
                 this.splashText = this.client.getSplashTextLoader().get();
             }
@@ -71,8 +71,8 @@ public abstract class TitleScreenMixin extends Screen {
                 this.initWidgetsNormal(i, 24);
             }
 
-            this.addButton(new ButtonWidget(this.width / 2 - 100, i + 72 + 12, 98, 20, new TranslatableText("menu.options"), (buttonWidget) -> this.client.openScreen(new OptionsScreen(this, this.client.options))));
-            this.addButton(new ButtonWidget(this.width / 2 + 2, i + 72 + 12, 98, 20, new TranslatableText("menu.quit"), (buttonWidget) -> this.client.openScreen(new ConfirmScreenCE((TitleScreen) (Object) this, new TranslatableText("menu.quit"), new TranslatableText("jece.menu.quit.message"), (b) -> this.client.openScreen((TitleScreen) (Object) this), (b) -> this.client.scheduleStop()))));
+            this.addButton(new ButtonWidget(this.width / 2 - 100, i + 48, 200, 20, new TranslatableText("menu.options"), (buttonWidget) -> this.client.openScreen(new OptionsScreen(this, this.client.options))));
+            this.addButton(new ButtonWidget(this.width / 2 - 100, i + 48 + 24, 200, 20, new TranslatableText("menu.quit"), (buttonWidget) -> this.client.openScreen(new ConfirmScreenCE((TitleScreen) (Object) this, new TranslatableText("menu.quit"), new TranslatableText("jece.menu.quit.message"), (b) -> this.client.openScreen((TitleScreen) (Object) this), (b) -> this.client.scheduleStop()))));
             this.client.setConnectedToRealms(false);
             ci.cancel();
         }
@@ -80,7 +80,7 @@ public abstract class TitleScreenMixin extends Screen {
 
     @Inject(method = "initWidgetsNormal", at = @At("HEAD"), cancellable = true)
     private void initWidgetsNormal(int y, int spacingY, CallbackInfo ci) {
-        if (!DefaultComparators.TITLE_SCREEN_DEFAULT.get()) {
+        if (!JECEComparators.JECEStorage.TITLE_SCREEN_BOOLEAN.get()) {
             this.addButton(new ButtonWidget(this.width / 2 - 100, y, 200, 20, new TranslatableText("menu.singleplayer"), (buttonWidget) -> this.client.openScreen(new SelectWorldScreen(this))));
             this.addButton(new ButtonWidget(this.width / 2 - 100, y + spacingY, 200, 20, new TranslatableText("menu.multiplayer"), (buttonWidget) -> this.client.openScreen(this.client.options.skipMultiplayerWarning ? new MultiplayerScreen(this) : new MultiplayerWarningScreen(this)), this.client.isMultiplayerEnabled() ? ButtonWidget.EMPTY : (buttonWidget, matrixStack, i, j) -> {
                 if (!buttonWidget.active) {
@@ -93,7 +93,7 @@ public abstract class TitleScreenMixin extends Screen {
 
     @Inject(method = "render", at = @At(value = "HEAD"), cancellable = true)
     private void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if (!DefaultComparators.TITLE_SCREEN_DEFAULT.get()) {
+        if (!JECEComparators.JECEStorage.TITLE_SCREEN_BOOLEAN.get()) {
             fill(matrices, 0, 0, this.width, this.height, -1);
             ((MinecraftClientInvoker) this.client).getPanorama().render(delta, 1.0F);
             int i = this.width / 2 - 137;

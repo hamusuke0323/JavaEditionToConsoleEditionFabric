@@ -1,6 +1,6 @@
 package com.hamusuke.jece.client;
 
-import com.hamusuke.jece.client.gui.screen.SelectDefaultsScreen;
+import com.hamusuke.jece.client.gui.screen.JECESwitcherScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -34,7 +34,7 @@ public class MainClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register((client) -> {
             while (OPEN_DEFAULT_CE_SWITCHER_SCREEN.wasPressed()) {
-                client.openScreen(new SelectDefaultsScreen(client.currentScreen));
+                client.openScreen(new JECESwitcherScreen(client.currentScreen));
             }
         });
     }

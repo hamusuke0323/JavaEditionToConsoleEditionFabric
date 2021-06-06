@@ -36,7 +36,9 @@ public class JECESwitcherScreen extends Screen {
         if (this.parent != null) {
             this.parent.init(this.client, this.width, this.height);
         }
+        double scrollAmount = this.switcherList == null ? 0.0D : this.switcherList.getScrollAmount();
         this.switcherList = new SwitcherList(this.client);
+        this.switcherList.setScrollAmount(scrollAmount);
         this.children.add(this.switcherList);
         this.addButton(new ButtonWidget(this.width / 4, this.height - 20, this.width / 2, 20, ScreenTexts.DONE, (b) -> this.onClose()));
     }
@@ -45,6 +47,7 @@ public class JECESwitcherScreen extends Screen {
         if (this.parent != null) {
             this.parent.render(matrices, -1, -1, delta);
         }
+        matrices.translate(0.0D, 0.0D, 350.0D);
         this.switcherList.render(matrices, mouseX, mouseY, delta);
         drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 6, 16777215);
         super.render(matrices, mouseX, mouseY, delta);
@@ -84,7 +87,6 @@ public class JECESwitcherScreen extends Screen {
         }
 
         protected void renderBackground(MatrixStack matrices) {
-            matrices.translate(0.0D, 0.0D, 1.0D);
             ((ScreenInvoker) JECESwitcherScreen.this).renderBackgroundFillGradient(matrices);
         }
 

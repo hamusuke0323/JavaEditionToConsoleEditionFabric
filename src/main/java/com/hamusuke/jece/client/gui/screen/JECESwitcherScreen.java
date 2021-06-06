@@ -15,29 +15,36 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.TranslatableText;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class JECESwitcherScreen extends Screen {
+    @Nullable
     private final Screen parent;
     private SwitcherList switcherList;
 
-    public JECESwitcherScreen(Screen parent) {
+    public JECESwitcherScreen(@Nullable Screen parent) {
         super(new TranslatableText("jece.switcher.screen"));
         this.parent = parent;
     }
 
     protected void init() {
         super.init();
-        this.parent.init(this.client, this.width, this.height);
+
+        if (this.parent != null) {
+            this.parent.init(this.client, this.width, this.height);
+        }
         this.switcherList = new SwitcherList(this.client);
         this.children.add(this.switcherList);
         this.addButton(new ButtonWidget(this.width / 4, this.height - 20, this.width / 2, 20, ScreenTexts.DONE, (b) -> this.onClose()));
     }
 
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.parent.render(matrices, -1, -1, delta);
+        if (this.parent != null) {
+            this.parent.render(matrices, -1, -1, delta);
+        }
         this.switcherList.render(matrices, mouseX, mouseY, delta);
         drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 6, 16777215);
         super.render(matrices, mouseX, mouseY, delta);

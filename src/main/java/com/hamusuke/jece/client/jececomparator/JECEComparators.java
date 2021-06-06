@@ -63,17 +63,19 @@ public class JECEComparators {
 
     public static synchronized void read() {
         File json = new File(MainClient.jeceConfigDir, "switcher_config.json");
-        try (FileInputStream fileInputStream = new FileInputStream(json);
-             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8)
-        ) {
-            JsonObject jsonObject = GSON.fromJson(inputStreamReader, JsonObject.class);
-            for (JECEComparator jeceComparator : JECE_COMPARATORS) {
-                if (jsonObject.has(jeceComparator.getId())) {
-                    jeceComparator.set(jsonObject.get(jeceComparator.getId()).getAsBoolean());
+        if (json.exists()) {
+            try (FileInputStream fileInputStream = new FileInputStream(json);
+                 InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8)
+            ) {
+                JsonObject jsonObject = GSON.fromJson(inputStreamReader, JsonObject.class);
+                for (JECEComparator jeceComparator : JECE_COMPARATORS) {
+                    if (jsonObject.has(jeceComparator.getId())) {
+                        jeceComparator.set(jsonObject.get(jeceComparator.getId()).getAsBoolean());
+                    }
                 }
+            } catch (Exception e) {
+                LOGGER.warn("Error occurred while reading config file", e);
             }
-        } catch (Exception e) {
-            LOGGER.warn("Error occurred while reading config file", e);
         }
     }
 

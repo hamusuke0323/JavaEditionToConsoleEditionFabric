@@ -1,6 +1,7 @@
 package com.hamusuke.jece.client.gui.screen;
 
 import com.google.common.collect.Lists;
+import com.hamusuke.jece.client.invoker.ScreenInvoker;
 import com.hamusuke.jece.client.jececomparator.JECEComparator;
 import com.hamusuke.jece.client.jececomparator.JECEComparators;
 import net.fabricmc.api.EnvType;
@@ -29,12 +30,14 @@ public class JECESwitcherScreen extends Screen {
 
     protected void init() {
         super.init();
+        this.parent.init(this.client, this.width, this.height);
         this.switcherList = new SwitcherList(this.client);
         this.children.add(this.switcherList);
         this.addButton(new ButtonWidget(this.width / 4, this.height - 20, this.width / 2, 20, ScreenTexts.DONE, (b) -> this.onClose()));
     }
 
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        this.parent.render(matrices, -1, -1, delta);
         this.switcherList.render(matrices, mouseX, mouseY, delta);
         drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 6, 16777215);
         super.render(matrices, mouseX, mouseY, delta);
@@ -52,6 +55,8 @@ public class JECESwitcherScreen extends Screen {
             for (JECEComparator defaultComparator : JECEComparators.JECE_COMPARATORS) {
                 this.addEntry(new SwitcherEntry(defaultComparator));
             }
+
+            this.method_31322(false);
         }
 
         protected int getScrollbarPositionX() {
@@ -71,6 +76,11 @@ public class JECESwitcherScreen extends Screen {
             return super.addEntry(entry);
         }
 
+        protected void renderBackground(MatrixStack matrices) {
+            matrices.translate(0.0D, 0.0D, 1.0D);
+            ((ScreenInvoker) JECESwitcherScreen.this).renderBackgroundFillGradient(matrices);
+        }
+
         @Environment(EnvType.CLIENT)
         class SwitcherEntry extends ElementListWidget.Entry<SwitcherEntry> {
             private final List<AbstractButtonWidget> buttons = Lists.newArrayList();
@@ -87,11 +97,13 @@ public class JECESwitcherScreen extends Screen {
                     b.active = false;
                     this.useCE.active = true;
                     this.jeceComparator.onPressUseJE();
+                    JECESwitcherScreen.this.init(JECESwitcherScreen.this.client, JECESwitcherScreen.this.width, JECESwitcherScreen.this.height);
                 }));
                 this.useCE = this.addButton(new ButtonWidget(0, 0, SwitcherList.this.getRowWidth() / 2, 20, new TranslatableText("jece.switcher.switch.ce"), (b) -> {
                     b.active = false;
                     this.useJE.active = true;
                     this.jeceComparator.onPressUseCE();
+                    JECESwitcherScreen.this.init(JECESwitcherScreen.this.client, JECESwitcherScreen.this.width, JECESwitcherScreen.this.height);
                 }));
                 this.useJE.active = !this.jeceComparator.isJESelected();
                 this.useCE.active = !this.useJE.active;

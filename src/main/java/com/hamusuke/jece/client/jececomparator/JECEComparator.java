@@ -18,17 +18,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Environment(EnvType.CLIENT)
 public class JECEComparator {
+    private final String id;
     private final Identifier illustration;
     private final int textureWidth;
     private final int textureHeight;
     private final Text title;
     private final Text description;
-    private final Text je = new TranslatableText("jece.switcher.je");
-    private final Text ce = new TranslatableText("jece.switcher.ce");
+    private static final Text je = new TranslatableText("jece.switcher.je");
+    private static final Text ce = new TranslatableText("jece.switcher.ce");
     private final BooleanConsumer onPress;
     private final BooleanGetter booleanGetter;
 
-    public JECEComparator(Identifier illustration, int textureWidth, int textureHeight, Text title, Text description, AtomicBoolean setterGetter) {
+    public JECEComparator(String id, Identifier illustration, int textureWidth, int textureHeight, Text title, Text description, AtomicBoolean setterGetter) {
+        this.id = id;
         this.illustration = illustration;
         this.textureWidth = textureWidth;
         this.textureHeight = textureHeight;
@@ -43,8 +45,8 @@ public class JECEComparator {
         float centerX = rowLeft + halfRowWidth;
         int fontHeight = client.textRenderer.fontHeight;
         client.textRenderer.drawWithShadow(matrices, this.title, centerX - (float) client.textRenderer.getWidth(this.title) / 2, rowTop, 16777215);
-        client.textRenderer.drawWithShadow(matrices, this.je, (rowLeft + halfRowWidth / 2) - (float) client.textRenderer.getWidth(this.je) / 2, rowTop + fontHeight + 1, 16777215);
-        client.textRenderer.drawWithShadow(matrices, this.ce, (centerX + halfRowWidth / 2) - (float) client.textRenderer.getWidth(this.ce) / 2, rowTop + fontHeight + 1, 16777215);
+        client.textRenderer.drawWithShadow(matrices, je, (rowLeft + halfRowWidth / 2) - (float) client.textRenderer.getWidth(je) / 2, rowTop + fontHeight + 1, 16777215);
+        client.textRenderer.drawWithShadow(matrices, ce, (centerX + halfRowWidth / 2) - (float) client.textRenderer.getWidth(ce) / 2, rowTop + fontHeight + 1, 16777215);
         List<OrderedText> wrappedLines = client.textRenderer.wrapLines(this.description, rowWidth);
 
         client.getTextureManager().bindTexture(this.illustration);
@@ -57,12 +59,22 @@ public class JECEComparator {
         }
     }
 
+    public String getId() {
+        return this.id;
+    }
+
+    public void set(boolean bool) {
+        this.onPress.accept(bool);
+    }
+
     public void onPressUseJE() {
         this.onPress.accept(true);
+        JECEComparators.write();
     }
 
     public void onPressUseCE() {
         this.onPress.accept(false);
+        JECEComparators.write();
     }
 
     public boolean isJESelected() {

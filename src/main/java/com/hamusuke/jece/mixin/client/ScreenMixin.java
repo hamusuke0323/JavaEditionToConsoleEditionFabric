@@ -1,5 +1,6 @@
 package com.hamusuke.jece.mixin.client;
 
+import com.hamusuke.jece.JECE;
 import com.hamusuke.jece.client.MainClient;
 import com.hamusuke.jece.client.gui.screen.JECESwitcherScreen;
 import com.hamusuke.jece.client.invoker.DrawableHelperInvoker;
@@ -33,8 +34,8 @@ import static com.hamusuke.jece.client.util.CEUtil.DIALOG_WINDOW;
 @Environment(EnvType.CLIENT)
 public abstract class ScreenMixin extends DrawableHelper implements ScreenInvoker {
     private static final Identifier CREATIVE_INVENTORY_TABS = new Identifier("textures/gui/container/creative_inventory/tabs.png");
-    private static final Identifier MINECRAFT_TITLE_TEXTURES_CE = new Identifier(MainClient.MOD_ID, "textures/gui/title/minecraft.png");
-    private static final Identifier MINECRAFT_TITLE_EDITION_CE = new Identifier(MainClient.MOD_ID, "textures/gui/title/edition.png");
+    private static final Identifier MINECRAFT_TITLE_TEXTURES_CE = new Identifier(JECE.MOD_ID, "textures/gui/title/minecraft.png");
+    private static final Identifier MINECRAFT_TITLE_EDITION_CE = new Identifier(JECE.MOD_ID, "textures/gui/title/edition.png");
 
     @Shadow
     @Nullable
@@ -206,7 +207,7 @@ public abstract class ScreenMixin extends DrawableHelper implements ScreenInvoke
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (MainClient.OPEN_DEFAULT_CE_SWITCHER_SCREEN.matchesKey(keyCode, scanCode) && !(this.client.currentScreen instanceof JECESwitcherScreen)) {
+        if (MainClient.OPEN_SWITCHER_SCREEN.matchesKey(keyCode, scanCode) && !(this.client.currentScreen instanceof JECESwitcherScreen)) {
             this.client.openScreen(new JECESwitcherScreen(this.client.currentScreen));
             cir.cancel();
         }

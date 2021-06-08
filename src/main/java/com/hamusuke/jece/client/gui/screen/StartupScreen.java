@@ -1,5 +1,6 @@
 package com.hamusuke.jece.client.gui.screen;
 
+import com.hamusuke.jece.JECE;
 import com.hamusuke.jece.client.MainClient;
 import com.hamusuke.jece.client.invoker.MinecraftClientInvoker;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -32,9 +33,9 @@ public class StartupScreen extends Screen {
     private final Consumer<Optional<Throwable>> exceptionHandler;
     private float progress;
     private float fadeout;
-    private static final Identifier TITLE_IMAGE = new Identifier(MainClient.MOD_ID, "textures/gui/title/startupframes/title.png");
-    private static final Identifier MOJANG = new Identifier(MainClient.MOD_ID, "textures/gui/title/startupframes/mojang.png");
-    private static final Identifier FourJSTUDIOS = new Identifier(MainClient.MOD_ID, "textures/gui/title/startupframes/4jstudios.png");
+    private static final Identifier TITLE_IMAGE = new Identifier(JECE.MOD_ID, "textures/gui/title/startupframes/title.png");
+    private static final Identifier MOJANG = new Identifier(JECE.MOD_ID, "textures/gui/title/startupframes/mojang.png");
+    private static final Identifier FourJSTUDIOS = new Identifier(JECE.MOD_ID, "textures/gui/title/startupframes/4jstudios.png");
     private int counter = 1;
 
     public StartupScreen(MinecraftClient mc, ResourceReloadMonitor monitor, Consumer<Optional<Throwable>> exceptionHandler) {
@@ -46,7 +47,7 @@ public class StartupScreen extends Screen {
 
     public static void loadStartupTextures(MinecraftClient mc) {
         for (int i = 1; i <= 96; i++) {
-            Identifier location = new Identifier(MainClient.MOD_ID, "textures/gui/title/startupframes/" + i + ".png");
+            Identifier location = new Identifier(JECE.MOD_ID, "textures/gui/title/startupframes/" + i + ".png");
             mc.getTextureManager().registerTexture(location, new StartupTextures(location));
         }
         mc.getTextureManager().registerTexture(TITLE_IMAGE, new StartupTextures(TITLE_IMAGE));
@@ -60,7 +61,7 @@ public class StartupScreen extends Screen {
         this.mc.getTextureManager().bindTexture(TITLE_IMAGE);
         drawTexture(matrices, 0, 0, this.width, this.height, 0.0F, 0.0F, 1920, 1080, 1920, 1080);
         if (this.counter <= 96) {
-            this.mc.getTextureManager().bindTexture(new Identifier(MainClient.MOD_ID, "textures/gui/title/startupframes/" + MathHelper.clamp(this.counter, 1, 96) + ".png"));
+            this.mc.getTextureManager().bindTexture(new Identifier(JECE.MOD_ID, "textures/gui/title/startupframes/" + MathHelper.clamp(this.counter, 1, 96) + ".png"));
             drawTexture(matrices, 0, 0, this.width / 6 + 15, this.height / 6 + 3, 0.0F, 0.0F, 382, 192, 382, 192);
             this.counter++;
         }

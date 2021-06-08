@@ -17,7 +17,8 @@
     "client.TitleScreenMixin",
     "client.CreditsScreenMixin",
     "client.ScreenMixin",
-    "client.DrawableHelperMixin"
+    "client.DrawableHelperMixin",
+    "client.IntegratedServerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

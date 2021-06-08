@@ -1,10 +1,10 @@
 package com.hamusuke.jece.mixin.client;
 
-import com.hamusuke.jece.client.MainClient;
 import com.hamusuke.jece.client.jececomparator.JECEComparators;
 import com.hamusuke.jece.client.gui.screen.ConfirmScreenCE;
 import com.hamusuke.jece.client.invoker.MinecraftClientInvoker;
 import com.hamusuke.jece.client.invoker.ScreenInvoker;
+import com.hamusuke.jece.client.util.CEUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -20,7 +20,6 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
@@ -48,8 +47,6 @@ public abstract class TitleScreenMixin extends Screen {
 
     @Shadow
     protected abstract void initWidgetsNormal(int y, int spacingY);
-
-    private static final Identifier PANORAMA_OVERLAY_CE = new Identifier(MainClient.MOD_ID, "textures/gui/title/background/panorama_overlay.png");
 
     private TitleScreenMixin(Text title) {
         super(title);
@@ -97,7 +94,7 @@ public abstract class TitleScreenMixin extends Screen {
             fill(matrices, 0, 0, this.width, this.height, -1);
             ((MinecraftClientInvoker) this.client).getPanorama().render(delta, 1.0F);
             int i = this.width / 2 - 137;
-            this.client.getTextureManager().bindTexture(PANORAMA_OVERLAY_CE);
+            this.client.getTextureManager().bindTexture(CEUtil.PANORAMA_OVERLAY_CE);
             drawTexture(matrices, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);
             ((ScreenInvoker) this).renderMinecraftTitle(matrices, false);
 

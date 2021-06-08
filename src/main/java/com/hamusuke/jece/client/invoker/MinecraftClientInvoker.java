@@ -10,4 +10,6 @@ public interface MinecraftClientInvoker {
     StartupSoundPlayer getPlayer();
 
     RotatingCubeMapRenderer getPanorama();
+
+    boolean isCreateWorld();
 }

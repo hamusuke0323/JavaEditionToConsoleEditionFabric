@@ -15,6 +15,7 @@ import net.minecraft.util.Identifier;
 import java.awt.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BooleanSupplier;
 
 @Environment(EnvType.CLIENT)
 public class JECEComparator {
@@ -27,7 +28,7 @@ public class JECEComparator {
     private static final Text je = new TranslatableText("jece.switcher.je");
     private static final Text ce = new TranslatableText("jece.switcher.ce");
     private final BooleanConsumer onPress;
-    private final BooleanGetter booleanGetter;
+    private final BooleanSupplier booleanGetter;
 
     public JECEComparator(String id, Identifier illustration, int textureWidth, int textureHeight, Text title, Text description, AtomicBoolean setterGetter) {
         this.id = id;
@@ -78,11 +79,6 @@ public class JECEComparator {
     }
 
     public boolean isJESelected() {
-        return this.booleanGetter.isJESelected();
-    }
-
-    @Environment(EnvType.CLIENT)
-    public interface BooleanGetter {
-        boolean isJESelected();
+        return this.booleanGetter.getAsBoolean();
     }
 }

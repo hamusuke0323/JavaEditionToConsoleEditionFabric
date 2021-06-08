@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import com.hamusuke.jece.JECE;
 import com.hamusuke.jece.client.MainClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -22,8 +23,8 @@ public class JECEComparators {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Gson GSON = new Gson();
     public static final List<JECEComparator> JECE_COMPARATORS = Lists.newArrayList();
-    public static final JECEComparator TITLE_SCREEN = registerComparator("title_screen", new Identifier(MainClient.MOD_ID, "textures/gui/jeceswitcher/titlescreen.png"), 3840, 1080, "jece.switchers.titlescreen", JECEStorage.TITLE_SCREEN_BOOLEAN);
-    public static final JECEComparator ENCHANTMENT = registerComparator("enchantment", new Identifier(MainClient.MOD_ID, "textures/gui/jeceswitcher/enchantment.png"), 1266, 388, "jece.switchers.enchantment", JECEStorage.ENCHANTMENT_BOOLEAN);
+    public static final JECEComparator TITLE_SCREEN = registerComparator("title_screen", new Identifier(JECE.MOD_ID, "textures/gui/jeceswitcher/titlescreen.png"), 3840, 1080, "jece.switchers.titlescreen", JECEStorage.TITLE_SCREEN_BOOLEAN);
+    public static final JECEComparator ENCHANTMENT = registerComparator("enchantment", new Identifier(JECE.MOD_ID, "textures/gui/jeceswitcher/enchantment.png"), 1266, 388, "jece.switchers.enchantment", JECEStorage.ENCHANTMENT_BOOLEAN);
 
     private static JECEComparator registerComparator(String id, Identifier illustration, int textureWidth, int textureHeight, String translationKey, AtomicBoolean setterGetter) {
         checkException(id);

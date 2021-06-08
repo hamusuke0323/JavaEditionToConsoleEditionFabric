@@ -1,5 +1,6 @@
 package com.hamusuke.jece.client.gui.screen;
 
+import com.hamusuke.jece.JECE;
 import com.hamusuke.jece.client.MainClient;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -15,8 +16,8 @@ import net.minecraft.util.math.MathHelper;
 @Environment(EnvType.CLIENT)
 public class SkippableMojangLogoAnd4JStudiosLogoScreen extends Screen {
     private final TitleScreen menu;
-    private static final Identifier MOJANG = new Identifier(MainClient.MOD_ID, "textures/gui/title/startupframes/mojang.png");
-    private static final Identifier FourJSTUDIOS = new Identifier(MainClient.MOD_ID, "textures/gui/title/startupframes/4jstudios.png");
+    private static final Identifier MOJANG = new Identifier(JECE.MOD_ID, "textures/gui/title/startupframes/mojang.png");
+    private static final Identifier FourJSTUDIOS = new Identifier(JECE.MOD_ID, "textures/gui/title/startupframes/4jstudios.png");
 
     private final float IncOrDecSize = 0.02F;
     private final int waitSize = 160;

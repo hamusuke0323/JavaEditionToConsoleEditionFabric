@@ -83,11 +83,6 @@ public class MainClient implements ClientModInitializer {
             }
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(NetworkManager.AUTO_SAVE_END_PACKET_ID, (client, handler, buf, responseSender) -> {
-            client.openScreen(current.get());
-            if (client.currentScreen == null) {
-                client.mouse.lockCursor();
-            }
-        });
+        ClientPlayNetworking.registerGlobalReceiver(NetworkManager.AUTO_SAVE_END_PACKET_ID, (client, handler, buf, responseSender) -> client.send(() -> client.openScreen(current.get())));
     }
 }

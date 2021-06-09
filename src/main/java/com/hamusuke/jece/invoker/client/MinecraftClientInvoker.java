@@ -1,4 +1,4 @@
-package com.hamusuke.jece.client.invoker;
+package com.hamusuke.jece.invoker.client;
 
 import com.hamusuke.jece.client.util.StartupSoundPlayer;
 import net.fabricmc.api.EnvType;

@@ -2,8 +2,8 @@ package com.hamusuke.jece.mixin.client;
 
 import com.hamusuke.jece.client.jececomparator.JECEComparators;
 import com.hamusuke.jece.client.gui.screen.ConfirmScreenCE;
-import com.hamusuke.jece.client.invoker.MinecraftClientInvoker;
-import com.hamusuke.jece.client.invoker.ScreenInvoker;
+import com.hamusuke.jece.invoker.client.MinecraftClientInvoker;
+import com.hamusuke.jece.invoker.client.ScreenInvoker;
 import com.hamusuke.jece.client.util.CEUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;

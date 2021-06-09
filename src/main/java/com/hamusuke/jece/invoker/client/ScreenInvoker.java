@@ -1,4 +1,4 @@
-package com.hamusuke.jece.client.invoker;
+package com.hamusuke.jece.invoker.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

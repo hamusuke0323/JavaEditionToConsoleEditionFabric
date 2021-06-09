@@ -1,7 +1,7 @@
 package com.hamusuke.jece.mixin.client;
 
 import com.hamusuke.jece.client.MainClient;
-import com.hamusuke.jece.client.invoker.IntegratedServerInvoker;
+import com.hamusuke.jece.invoker.client.IntegratedServerInvoker;
 import com.hamusuke.jece.invoker.ServerWorldInvoker;
 import com.hamusuke.jece.network.NetworkManager;
 import com.mojang.authlib.GameProfileRepository;
@@ -73,8 +73,8 @@ public abstract class IntegratedServerMixin extends MinecraftServer implements I
                 this.getPlayerManager().setViewDistance(i);
             }
 
-            if (MainClient.jeceOptions.autoSaveTicks < 900) {
-                int j = MainClient.jeceOptions.autoSaveTicks;
+            int j = MainClient.jeceOptions.autoSaveTicks;
+            if (j >= 900) {
                 int k = this.getTicks() % j;
                 int l = j - k;
                 if (l <= 100 && l % 20 == 0) {

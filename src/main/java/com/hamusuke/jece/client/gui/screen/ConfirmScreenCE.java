@@ -1,7 +1,7 @@
 package com.hamusuke.jece.client.gui.screen;
 
 import com.google.common.collect.Lists;
-import com.hamusuke.jece.client.invoker.ScreenInvoker;
+import com.hamusuke.jece.invoker.client.ScreenInvoker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;

@@ -2,8 +2,8 @@ package com.hamusuke.jece.mixin.client;
 
 import com.google.common.collect.*;
 import com.google.gson.JsonParseException;
-import com.hamusuke.jece.client.invoker.ItemInvoker;
-import com.hamusuke.jece.client.invoker.ItemStackInvoker;
+import com.hamusuke.jece.invoker.client.ItemInvoker;
+import com.hamusuke.jece.invoker.client.ItemStackInvoker;
 import com.hamusuke.jece.client.util.CEUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

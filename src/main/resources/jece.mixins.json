@@ -19,7 +19,8 @@
     "client.ScreenMixin",
     "client.DrawableHelperMixin",
     "client.IntegratedServerMixin",
-    "client.GameMenuScreenMixin"
+    "client.GameMenuScreenMixin",
+    "client.AdvancementsScreenMixin"
   ],
   "mixins": [
     "ServerWorldMixin"

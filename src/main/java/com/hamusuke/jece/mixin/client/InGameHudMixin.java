@@ -1,6 +1,6 @@
 package com.hamusuke.jece.mixin.client;
 
-import com.hamusuke.jece.client.invoker.ItemStackInvoker;
+import com.hamusuke.jece.invoker.client.ItemStackInvoker;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;

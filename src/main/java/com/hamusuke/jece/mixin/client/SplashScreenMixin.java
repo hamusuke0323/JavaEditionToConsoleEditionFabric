@@ -1,6 +1,6 @@
 package com.hamusuke.jece.mixin.client;
 
-import com.hamusuke.jece.client.invoker.SplashScreenInvoker;
+import com.hamusuke.jece.invoker.client.SplashScreenInvoker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.SplashScreen;

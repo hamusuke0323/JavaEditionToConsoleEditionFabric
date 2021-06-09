@@ -1,7 +1,7 @@
 package com.hamusuke.jece.mixin.client;
 
 import com.hamusuke.jece.client.MainClient;
-import com.hamusuke.jece.client.invoker.AbstractButtonWidgetInvoker;
+import com.hamusuke.jece.invoker.client.AbstractButtonWidgetInvoker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;

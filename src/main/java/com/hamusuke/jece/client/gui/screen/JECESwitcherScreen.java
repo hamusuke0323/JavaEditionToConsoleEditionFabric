@@ -1,7 +1,7 @@
 package com.hamusuke.jece.client.gui.screen;
 
 import com.google.common.collect.Lists;
-import com.hamusuke.jece.client.invoker.ScreenInvoker;
+import com.hamusuke.jece.invoker.client.ScreenInvoker;
 import com.hamusuke.jece.client.jececomparator.JECEComparator;
 import com.hamusuke.jece.client.jececomparator.JECEComparators;
 import net.fabricmc.api.EnvType;

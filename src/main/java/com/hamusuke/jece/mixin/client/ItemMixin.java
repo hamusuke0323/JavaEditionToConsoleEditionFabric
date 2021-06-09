@@ -1,6 +1,6 @@
 package com.hamusuke.jece.mixin.client;
 
-import com.hamusuke.jece.client.invoker.ItemInvoker;
+import com.hamusuke.jece.invoker.client.ItemInvoker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.Item;

@@ -2,9 +2,10 @@ package com.hamusuke.jece.mixin.client;
 
 import com.hamusuke.jece.client.MainClient;
 import com.hamusuke.jece.client.gui.screen.ConfirmScreenCE;
-import com.hamusuke.jece.client.invoker.AbstractButtonWidgetInvoker;
-import com.hamusuke.jece.client.invoker.IntegratedServerInvoker;
-import com.hamusuke.jece.client.invoker.ScreenInvoker;
+import com.hamusuke.jece.invoker.client.AbstractButtonWidgetInvoker;
+import com.hamusuke.jece.invoker.client.AdvancementsScreenInvoker;
+import com.hamusuke.jece.invoker.client.IntegratedServerInvoker;
+import com.hamusuke.jece.invoker.client.ScreenInvoker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.*;
@@ -47,9 +48,7 @@ public abstract class GameMenuScreenMixin extends Screen {
             }));
 
             this.addButton(new ButtonWidget(this.width / 2 - 102, this.height / 4 + 48 + 24 + 24 + -16, 204, 20, new TranslatableText("gui.advancements"), (buttonWidget) -> {
-                AdvancementsScreen advancementsScreen = new AdvancementsScreen(this.client.player.networkHandler.getAdvancementHandler());
-
-                this.client.openScreen(advancementsScreen);
+                this.client.openScreen(((AdvancementsScreenInvoker) new AdvancementsScreen(this.client.player.networkHandler.getAdvancementHandler())).setParentScreen(this));
             }));
 
             if (this.client.isInSingleplayer()) {

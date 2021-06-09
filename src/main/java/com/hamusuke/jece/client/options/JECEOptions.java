@@ -18,7 +18,7 @@ public class JECEOptions {
     private static final Gson GSON = new Gson();
 
     public boolean displayPlayerOnScreen = true;
-    public int autoSaveTicks = 4000;
+    public int autoSaveTicks = 1800;
 
     public JECEOptions(File configFilePath) {
         this.configFilePath = configFilePath;

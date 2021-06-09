@@ -1,6 +1,6 @@
 package com.hamusuke.jece.mixin.client;
 
-import com.hamusuke.jece.client.invoker.DrawableHelperInvoker;
+import com.hamusuke.jece.invoker.client.DrawableHelperInvoker;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

@@ -1,7 +1,7 @@
 package com.hamusuke.jece.client.gui.screen;
 
-import com.hamusuke.jece.client.invoker.MinecraftClientInvoker;
-import com.hamusuke.jece.client.invoker.ScreenInvoker;
+import com.hamusuke.jece.invoker.client.MinecraftClientInvoker;
+import com.hamusuke.jece.invoker.client.ScreenInvoker;
 import com.hamusuke.jece.client.util.CEUtil;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.api.EnvType;

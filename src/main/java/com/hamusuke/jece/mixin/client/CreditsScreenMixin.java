@@ -1,6 +1,6 @@
 package com.hamusuke.jece.mixin.client;
 
-import com.hamusuke.jece.client.invoker.CreditsScreenInvoker;
+import com.hamusuke.jece.invoker.client.CreditsScreenInvoker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.CreditsScreen;

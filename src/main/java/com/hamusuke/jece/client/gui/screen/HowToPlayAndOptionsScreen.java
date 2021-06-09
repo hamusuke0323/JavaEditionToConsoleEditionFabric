@@ -5,7 +5,7 @@ import net.minecraft.client.util.NarratorManager;
 
 public class HowToPlayAndOptionsScreen extends Screen {
 
-    protected HowToPlayAndOptionsScreen(Screen parent) {
+    public HowToPlayAndOptionsScreen(Screen parent) {
         super(NarratorManager.EMPTY);
     }
 }

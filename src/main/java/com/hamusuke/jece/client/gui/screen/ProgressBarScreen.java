@@ -22,20 +22,22 @@ public class ProgressBarScreen extends Screen {
     private float progress;
     private Text title;
     private Text description;
+    private final boolean noRenderingBar;
 
     public ProgressBarScreen(Text title, Text desc) {
-        this(title, desc, null);
+        this(title, desc, null, false);
     }
 
     public ProgressBarScreen() {
-        this(NarratorManager.EMPTY, NarratorManager.EMPTY, null);
+        this(NarratorManager.EMPTY, NarratorManager.EMPTY, null, true);
     }
 
-    public ProgressBarScreen(Text text, Text desc, @Nullable WorldGenerationProgressTracker tracker) {
+    public ProgressBarScreen(Text text, Text desc, @Nullable WorldGenerationProgressTracker tracker, boolean noRenderingBar) {
         super(NarratorManager.EMPTY);
         this.title = text;
         this.description = desc;
         this.listener = tracker;
+        this.noRenderingBar = noRenderingBar;
     }
 
     public void setTitle(Text title) {
@@ -44,6 +46,20 @@ public class ProgressBarScreen extends Screen {
 
     public void setDescription(Text description) {
         this.description = description;
+    }
+
+    public ProgressBarScreen description(Text description) {
+        this.setDescription(description);
+        return this;
+    }
+
+    public void setProgress(float progress) {
+        this.progress = MathHelper.clamp(progress, 0.0F, 1.0F);
+    }
+
+    public ProgressBarScreen progress(float progress) {
+        this.setProgress(progress);
+        return this;
     }
 
     public boolean shouldCloseOnEsc() {
@@ -72,8 +88,7 @@ public class ProgressBarScreen extends Screen {
             }
 
             this.renderProgressBar(matrices, this.width / 2 - this.width / 3, this.height / 2 + 11, this.width / 2 + this.width / 3, this.height / 2 + 20);
-        } else if (((MinecraftClientInvoker) this.client).isCreateWorld()) {
-            //this.progress = this.client.progress;
+        } else if (((MinecraftClientInvoker) this.client).isCreateWorld() || !this.noRenderingBar) {
             this.renderProgressBar(matrices, this.width / 2 - this.width / 3, this.height / 2 + 11, this.width / 2 + this.width / 3, this.height / 2 + 20);
         }
 
@@ -98,7 +113,7 @@ public class ProgressBarScreen extends Screen {
     }
 
     private void renderProgressBar(MatrixStack matrices, int x1, int y1, int x2, int y2) {
-        int i = MathHelper.ceil((float) (x2 - x1 - 2) * this.progress);
+        int i = MathHelper.ceil((float) (x2 - x1) * this.progress) == 0 ? 1 : MathHelper.ceil((float) (x2 - x1) * this.progress);
         int j = BackgroundHelper.ColorMixer.getArgb(255, 140, 140, 140);
         int k = BackgroundHelper.ColorMixer.getArgb(255, 0, 255, 0);
         fill(matrices, x1, y1, x2, y2, j);

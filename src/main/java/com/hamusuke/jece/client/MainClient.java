@@ -2,7 +2,9 @@ package com.hamusuke.jece.client;
 
 import com.hamusuke.jece.JECE;
 import com.hamusuke.jece.client.gui.screen.JECESwitcherScreen;
+import com.hamusuke.jece.client.gui.screen.ProgressBarScreen;
 import com.hamusuke.jece.client.jececomparator.JECEComparators;
+import com.hamusuke.jece.client.options.JECEOptions;
 import com.hamusuke.jece.network.NetworkManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -11,15 +13,18 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gui.screen.SplashScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Environment(EnvType.CLIENT)
 public class MainClient implements ClientModInitializer {
@@ -33,12 +38,17 @@ public class MainClient implements ClientModInitializer {
     public static final SoundEvent UI_SLIDER_SLIDING = new SoundEvent(UI_SLIDER_SLIDING_SOUND);
     public static KeyBinding OPEN_SWITCHER_SCREEN;
     public static File jeceConfigDir;
+    public static JECEOptions jeceOptions;
+    private static final AtomicReference<Screen> current = new AtomicReference<>();
 
     public void onInitializeClient() {
         jeceConfigDir = FabricLoader.getInstance().getConfigDir().resolve("jece").toFile();
         if (!jeceConfigDir.exists() && jeceConfigDir.mkdir()) {
             LOGGER.info("jece config directory not found. made the directory.");
         }
+
+        jeceOptions = new JECEOptions(new File(jeceConfigDir, "config.json"));
+        jeceOptions.read();
 
         JECEComparators.read();
 
@@ -55,7 +65,29 @@ public class MainClient implements ClientModInitializer {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(NetworkManager.AUTO_SAVE_PACKET_ID, (client, handler, buf, responseSender) -> {
+            if (!(client.currentScreen instanceof ProgressBarScreen)) {
+                current.set(client.currentScreen);
+            }
+            Text saveLevel = new TranslatableText("menu.savelevel");
+            Text text = buf.readText();
+            float progress = buf.readFloat();
 
+            if (buf.readBoolean()) {
+                if (client.currentScreen instanceof ProgressBarScreen) {
+                    ((ProgressBarScreen) client.currentScreen).description(text).progress(progress);
+                } else {
+                    client.openScreen(new ProgressBarScreen(saveLevel, text).progress(progress));
+                }
+            } else {
+                client.openScreen(new ProgressBarScreen(saveLevel, text).progress(progress));
+            }
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(NetworkManager.AUTO_SAVE_END_PACKET_ID, (client, handler, buf, responseSender) -> {
+            client.openScreen(current.get());
+            if (client.currentScreen == null) {
+                client.mouse.lockCursor();
+            }
         });
     }
 }

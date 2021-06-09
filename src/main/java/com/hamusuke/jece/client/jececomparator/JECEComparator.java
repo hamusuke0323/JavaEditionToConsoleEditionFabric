@@ -28,7 +28,7 @@ public class JECEComparator {
     private static final Text je = new TranslatableText("jece.switcher.je");
     private static final Text ce = new TranslatableText("jece.switcher.ce");
     private final BooleanConsumer onPress;
-    private final BooleanSupplier booleanGetter;
+    private final BooleanSupplier booleanSupplier;
 
     public JECEComparator(String id, Identifier illustration, int textureWidth, int textureHeight, Text title, Text description, AtomicBoolean setterGetter) {
         this.id = id;
@@ -38,7 +38,7 @@ public class JECEComparator {
         this.title = title;
         this.description = description;
         this.onPress = setterGetter::set;
-        this.booleanGetter = setterGetter::get;
+        this.booleanSupplier = setterGetter::get;
     }
 
     public void render(MinecraftClient client, MatrixStack matrices, int rowLeft, int rowTop, int rowWidth, int rowHeight) {
@@ -79,6 +79,6 @@ public class JECEComparator {
     }
 
     public boolean isJESelected() {
-        return this.booleanGetter.getAsBoolean();
+        return this.booleanSupplier.getAsBoolean();
     }
 }

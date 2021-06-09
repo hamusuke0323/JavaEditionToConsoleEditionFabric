@@ -1,5 +1,6 @@
 package com.hamusuke.jece.mixin.client;
 
+import com.hamusuke.jece.client.MainClient;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -28,7 +29,7 @@ public class GameRendererMixin {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void tick(CallbackInfo ci) {
-        if (this.client.player != null && this.client.currentScreen == null /*&& this.client.options.displayPlayerOnScreen*/ && (this.client.player.abilities.flying || this.client.player.isSprinting() || this.client.player.isFallFlying() || this.client.player.isSneaking())) {
+        if (this.client.player != null && this.client.currentScreen == null && MainClient.jeceOptions.displayPlayerOnScreen && (this.client.player.abilities.flying || this.client.player.isSprinting() || this.client.player.isFallFlying() || this.client.player.isSneaking())) {
             this.renderPlayerTicks = 7;
         } else if (this.renderPlayerTicks != 0) {
             this.renderPlayerTicks--;
@@ -37,7 +38,7 @@ public class GameRendererMixin {
 
     @Inject(method = "render", at = @At("TAIL"))
     private void render(float tickDelta, long startTime, boolean tick, CallbackInfo ci) {
-        if (this.client.player != null && !this.client.skipGameRender && tick && this.client.world != null && !this.client.options.hudHidden && this.client.currentScreen == null && this.renderPlayerTicks != 0) {
+        if (MainClient.jeceOptions.displayPlayerOnScreen && this.client.player != null && !this.client.skipGameRender && tick && this.client.world != null && !this.client.options.hudHidden && this.client.currentScreen == null && this.renderPlayerTicks != 0) {
             this.drawPlayerOnLeft(20, 50, 15, 150.0F, -21.0F, this.client.player.isFallFlying());
         }
     }

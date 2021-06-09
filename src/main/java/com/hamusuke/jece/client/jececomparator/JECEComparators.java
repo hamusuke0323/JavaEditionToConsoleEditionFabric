@@ -45,7 +45,7 @@ public class JECEComparators {
         }
     }
 
-    public static synchronized void write() {
+    public static void write() {
         File json = new File(MainClient.jeceConfigDir, "switcher_config.json");
         try (FileOutputStream fileOutputStream = new FileOutputStream(json);
              OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
@@ -62,7 +62,7 @@ public class JECEComparators {
         }
     }
 
-    public static synchronized void read() {
+    public static void read() {
         File json = new File(MainClient.jeceConfigDir, "switcher_config.json");
         if (json.exists()) {
             try (FileInputStream fileInputStream = new FileInputStream(json);

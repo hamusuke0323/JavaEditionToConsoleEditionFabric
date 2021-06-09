@@ -90,9 +90,9 @@ public abstract class MinecraftClientMixin implements MinecraftClientInvoker {
         if (screenIn instanceof LevelLoadingScreen) {
             ProgressBarScreen progressBarScreen;
             if (this.isCreateWorld) {
-                progressBarScreen = new ProgressBarScreen(new TranslatableText("server.initializing"), new TranslatableText("creating.spawn.area"), this.worldGenProgressTracker.get());
+                progressBarScreen = new ProgressBarScreen(new TranslatableText("server.initializing"), new TranslatableText("creating.spawn.area"), this.worldGenProgressTracker.get(), false);
             } else {
-                progressBarScreen = new ProgressBarScreen(new TranslatableText("server.initializing"), new TranslatableText("loading.spawn.area"), this.worldGenProgressTracker.get());
+                progressBarScreen = new ProgressBarScreen(new TranslatableText("server.initializing"), new TranslatableText("loading.spawn.area"), this.worldGenProgressTracker.get(), false);
             }
             return progressBarScreen;
         }

@@ -18,7 +18,11 @@
     "client.CreditsScreenMixin",
     "client.ScreenMixin",
     "client.DrawableHelperMixin",
-    "client.IntegratedServerMixin"
+    "client.IntegratedServerMixin",
+    "client.GameMenuScreenMixin"
+  ],
+  "mixins": [
+    "ServerWorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1

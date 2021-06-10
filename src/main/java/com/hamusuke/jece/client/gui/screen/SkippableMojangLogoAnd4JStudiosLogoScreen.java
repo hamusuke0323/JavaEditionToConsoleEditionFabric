@@ -1,7 +1,6 @@
 package com.hamusuke.jece.client.gui.screen;
 
 import com.hamusuke.jece.JECE;
-import com.hamusuke.jece.client.MainClient;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;

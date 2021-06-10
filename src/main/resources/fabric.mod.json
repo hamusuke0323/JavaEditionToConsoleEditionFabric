@@ -15,7 +15,10 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "com.hamusuke.jece.client.MainClient"
+      "com.hamusuke.jece.client.JECEClient"
+    ],
+    "server": [
+      "com.hamusuke.jece.server.JECEServer"
     ]
   },
   "mixins": [

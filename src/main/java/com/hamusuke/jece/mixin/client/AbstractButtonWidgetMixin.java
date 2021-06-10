@@ -1,6 +1,6 @@
 package com.hamusuke.jece.mixin.client;
 
-import com.hamusuke.jece.client.MainClient;
+import com.hamusuke.jece.client.JECEClient;
 import com.hamusuke.jece.invoker.client.AbstractButtonWidgetInvoker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -32,7 +32,7 @@ public class AbstractButtonWidgetMixin implements AbstractButtonWidgetInvoker {
             if (this.message instanceof TranslatableText) {
                 String key = ((TranslatableText) this.message).getKey();
                 if (key.equals("gui.back") || key.equals("gui.cancel") || key.equals("gui.done")) {
-                    soundManager.play(PositionedSoundInstance.master(MainClient.UI_BACKBUTTON_CLICK, 1.0F));
+                    soundManager.play(PositionedSoundInstance.master(JECEClient.UI_BACKBUTTON_CLICK, 1.0F));
                     ci.cancel();
                 }
             }

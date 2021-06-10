@@ -1,16 +1,17 @@
 package com.hamusuke.jece.mixin.client;
 
-import com.hamusuke.jece.client.MainClient;
+import com.hamusuke.jece.client.JECEClient;
 import com.hamusuke.jece.client.gui.screen.ConfirmScreenCE;
+import com.hamusuke.jece.invoker.MinecraftServerInvoker;
 import com.hamusuke.jece.invoker.client.AbstractButtonWidgetInvoker;
 import com.hamusuke.jece.invoker.client.AdvancementsScreenInvoker;
-import com.hamusuke.jece.invoker.client.IntegratedServerInvoker;
 import com.hamusuke.jece.invoker.client.ScreenInvoker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.*;
 import net.minecraft.client.gui.screen.advancement.AdvancementsScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
+import net.minecraft.client.gui.screen.options.OptionsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.realms.gui.screen.RealmsBridgeScreen;
 import net.minecraft.client.util.math.MatrixStack;
@@ -41,10 +42,11 @@ public abstract class GameMenuScreenMixin extends Screen {
             this.addButton(((AbstractButtonWidgetInvoker) new ButtonWidget(this.width / 2 - 102, this.height / 4 + 48 + -16, 204, 20, new TranslatableText("menu.returnToGame"), (buttonWidget) -> {
                 this.client.openScreen(null);
                 this.client.mouse.lockCursor();
-            })).setOnPressSound(MainClient.UI_BACKBUTTON_CLICK));
+            })).setOnPressSound(JECEClient.UI_BACKBUTTON_CLICK));
 
             this.addButton(new ButtonWidget(this.width / 2 - 102, this.height / 4 + 48 + 24 + -16, 204, 20, new TranslatableText("menu.options"), (p_213071_1_) -> {
                 //this.client.openScreen(new HowToPlayAndOptionsScreen(this));
+                this.client.openScreen(new OptionsScreen(this, this.client.options));
             }));
 
             this.addButton(new ButtonWidget(this.width / 2 - 102, this.height / 4 + 48 + 24 + 24 + -16, 204, 20, new TranslatableText("gui.advancements"), (buttonWidget) -> {
@@ -57,7 +59,7 @@ public abstract class GameMenuScreenMixin extends Screen {
                     if (integratedServer != null) {
                         this.client.openScreen(new ConfirmScreenCE(this, new TranslatableText("menu.game.save"), new TranslatableText("menu.game.save.desc"), ScreenTexts.CANCEL, new TranslatableText("gui.ok"), (btn) -> this.client.openScreen(this), (btn) -> {
                             this.client.openScreen(this);
-                            integratedServer.execute(((IntegratedServerInvoker) integratedServer)::saveAll);
+                            integratedServer.execute(((MinecraftServerInvoker) integratedServer)::saveAll);
                         }));
                     } else {
                         this.client.openScreen(this);

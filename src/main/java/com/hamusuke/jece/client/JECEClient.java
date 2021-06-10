@@ -1,7 +1,7 @@
 package com.hamusuke.jece.client;
 
 import com.hamusuke.jece.JECE;
-import com.hamusuke.jece.client.gui.screen.JECESwitcherScreen;
+import com.hamusuke.jece.client.gui.screen.JECESettingsScreen;
 import com.hamusuke.jece.client.gui.screen.ProgressBarScreen;
 import com.hamusuke.jece.client.jececomparator.JECEComparators;
 import com.hamusuke.jece.client.options.JECEOptions;
@@ -27,7 +27,7 @@ import java.io.File;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Environment(EnvType.CLIENT)
-public class MainClient implements ClientModInitializer {
+public class JECEClient implements ClientModInitializer {
     private static final Logger LOGGER = LogManager.getLogger();
     public static boolean isFirst = true;
     public static final Identifier UI_BUTTON_HOVER_SOUND = new Identifier(JECE.MOD_ID, "ui.button.hover");
@@ -36,7 +36,7 @@ public class MainClient implements ClientModInitializer {
     public static final SoundEvent UI_BUTTON_HOVER = new SoundEvent(UI_BUTTON_HOVER_SOUND);
     public static final SoundEvent UI_BACKBUTTON_CLICK = new SoundEvent(UI_BACKBUTTON_CLICK_SOUND);
     public static final SoundEvent UI_SLIDER_SLIDING = new SoundEvent(UI_SLIDER_SLIDING_SOUND);
-    public static KeyBinding OPEN_SWITCHER_SCREEN;
+    public static KeyBinding OPEN_SETTINGS_SCREEN;
     public static File jeceConfigDir;
     public static JECEOptions jeceOptions;
     private static final AtomicReference<Screen> current = new AtomicReference<>();
@@ -56,11 +56,11 @@ public class MainClient implements ClientModInitializer {
         Registry.register(Registry.SOUND_EVENT, UI_BACKBUTTON_CLICK_SOUND, UI_BACKBUTTON_CLICK);
         Registry.register(Registry.SOUND_EVENT, UI_SLIDER_SLIDING_SOUND, UI_SLIDER_SLIDING);
 
-        OPEN_SWITCHER_SCREEN = KeyBindingHelper.registerKeyBinding(new KeyBinding("jece.keybind.open.switcher", 342, "jece.jece"));
+        OPEN_SETTINGS_SCREEN = KeyBindingHelper.registerKeyBinding(new KeyBinding("jece.keybind.open.settings", 342, "jece.jece"));
 
         ClientTickEvents.END_CLIENT_TICK.register((client) -> {
-            while (OPEN_SWITCHER_SCREEN.wasPressed()) {
-                client.openScreen(new JECESwitcherScreen(client.currentScreen));
+            while (OPEN_SETTINGS_SCREEN.wasPressed()) {
+                client.openScreen(new JECESettingsScreen(client.currentScreen));
             }
         });
 
@@ -72,14 +72,10 @@ public class MainClient implements ClientModInitializer {
             Text text = buf.readText();
             float progress = buf.readFloat();
 
-            if (buf.readBoolean()) {
-                if (client.currentScreen instanceof ProgressBarScreen) {
-                    ((ProgressBarScreen) client.currentScreen).description(text).progress(progress);
-                } else {
-                    client.openScreen(new ProgressBarScreen(saveLevel, text).progress(progress));
-                }
+            if (client.currentScreen instanceof ProgressBarScreen) {
+                ((ProgressBarScreen) client.currentScreen).description(text).progress(progress);
             } else {
-                client.openScreen(new ProgressBarScreen(saveLevel, text).progress(progress));
+                client.send(() -> client.openScreen(new ProgressBarScreen(saveLevel, text).progress(progress)));
             }
         });
 

@@ -1,7 +1,7 @@
 package com.hamusuke.jece.mixin.client;
 
 import com.hamusuke.jece.JECE;
-import com.hamusuke.jece.client.MainClient;
+import com.hamusuke.jece.client.JECEClient;
 import com.hamusuke.jece.client.gui.screen.ProgressBarScreen;
 import com.hamusuke.jece.client.gui.screen.StartupScreen;
 import com.hamusuke.jece.invoker.client.MinecraftClientInvoker;
@@ -66,7 +66,7 @@ public abstract class MinecraftClientMixin implements MinecraftClientInvoker {
 
     @Inject(method = "<init>", at = @At(value = "TAIL"))
     private void MinecraftClient(RunArgs args, CallbackInfo ci) {
-        if (MainClient.isFirst && this.overlay instanceof SplashScreen) {
+        if (JECEClient.isFirst && this.overlay instanceof SplashScreen) {
             SplashScreenInvoker invoker = (SplashScreenInvoker) this.overlay;
             StartupScreen.loadStartupTextures((MinecraftClient) (Object) this);
             this.setOverlay(null);

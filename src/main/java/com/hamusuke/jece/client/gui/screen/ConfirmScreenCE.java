@@ -5,6 +5,7 @@ import com.hamusuke.jece.invoker.client.ScreenInvoker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.*;
@@ -27,7 +28,7 @@ public class ConfirmScreenCE extends Screen {
     private int dialogY;
 
     public ConfirmScreenCE(Screen parent, Text title, Text subtitle, Consumer<ButtonWidget> run1, Consumer<ButtonWidget> run2) {
-        this(parent, title, subtitle, new TranslatableText("gui.cancel"), new TranslatableText("gui.ok"), run1, run2);
+        this(parent, title, subtitle, ScreenTexts.CANCEL, new TranslatableText("gui.ok"), run1, run2);
     }
 
     public ConfirmScreenCE(Screen parent, Text title, Text subtitle, Text button1, Text button2, Consumer<ButtonWidget> run1, Consumer<ButtonWidget> run2) {

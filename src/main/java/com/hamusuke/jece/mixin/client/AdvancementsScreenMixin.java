@@ -1,6 +1,6 @@
 package com.hamusuke.jece.mixin.client;
 
-import com.hamusuke.jece.client.MainClient;
+import com.hamusuke.jece.client.JECEClient;
 import com.hamusuke.jece.invoker.client.AdvancementsScreenInvoker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -40,7 +40,7 @@ public class AdvancementsScreenMixin extends Screen implements AdvancementsScree
     }
 
     public void onClose() {
-        this.client.getSoundManager().play(PositionedSoundInstance.master(MainClient.UI_BACKBUTTON_CLICK, 1.0F));
+        this.client.getSoundManager().play(PositionedSoundInstance.master(JECEClient.UI_BACKBUTTON_CLICK, 1.0F));
         this.client.openScreen(this.parent);
     }
 }

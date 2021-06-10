@@ -20,10 +20,12 @@
     "client.DrawableHelperMixin",
     "client.IntegratedServerMixin",
     "client.GameMenuScreenMixin",
-    "client.AdvancementsScreenMixin"
+    "client.AdvancementsScreenMixin",
+    "client.WorldListWidgetEntryMixin"
   ],
   "mixins": [
-    "ServerWorldMixin"
+    "ServerWorldMixin",
+    "MinecraftServerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

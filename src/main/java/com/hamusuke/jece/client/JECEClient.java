@@ -71,11 +71,20 @@ public class JECEClient implements ClientModInitializer {
             Text saveLevel = new TranslatableText("menu.savelevel");
             Text text = buf.readText();
             float progress = buf.readFloat();
+            boolean isDedicatedServer = buf.readBoolean();
 
-            if (client.currentScreen instanceof ProgressBarScreen) {
-                ((ProgressBarScreen) client.currentScreen).description(text).progress(progress);
+            if (isDedicatedServer) {
+                if (client.currentScreen instanceof ProgressBarScreen) {
+                    ((ProgressBarScreen) client.currentScreen).progress(progress);
+                } else {
+                    client.send(() -> client.openScreen(new ProgressBarScreen(new TranslatableText("menu.dedicated.savelevel")).progress(progress)));
+                }
             } else {
-                client.send(() -> client.openScreen(new ProgressBarScreen(saveLevel, text).progress(progress)));
+                if (client.currentScreen instanceof ProgressBarScreen) {
+                    ((ProgressBarScreen) client.currentScreen).description(text).progress(progress);
+                } else {
+                    client.send(() -> client.openScreen(new ProgressBarScreen(saveLevel, text).progress(progress)));
+                }
             }
         });
 

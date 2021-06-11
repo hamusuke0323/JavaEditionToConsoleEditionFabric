@@ -73,6 +73,7 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
                 if (k == 0) {
                     LOGGER.info("Autosave started");
                     profiler.push("autoSave");
+                    this.getPlayerManager().sendToAll(new TitleS2CPacket(TitleS2CPacket.Action.ACTIONBAR, new TranslatableText("gui.autosave.start", 0)));
                     ((MinecraftServerInvoker) this).saveAll();
                     profiler.pop();
                     LOGGER.info("Autosave finished");

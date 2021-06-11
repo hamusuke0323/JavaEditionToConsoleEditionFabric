@@ -9,8 +9,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.WorldGenerationProgressTracker;
 import net.minecraft.client.gui.hud.BackgroundHelper;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.NarratorManager;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
@@ -24,16 +24,20 @@ public class ProgressBarScreen extends Screen {
     private Text description;
     private final boolean noRenderingBar;
 
+    public ProgressBarScreen(Text title) {
+        this(title, LiteralText.EMPTY);
+    }
+
     public ProgressBarScreen(Text title, Text desc) {
         this(title, desc, null, false);
     }
 
     public ProgressBarScreen() {
-        this(NarratorManager.EMPTY, NarratorManager.EMPTY, null, true);
+        this(LiteralText.EMPTY, LiteralText.EMPTY, null, true);
     }
 
     public ProgressBarScreen(Text text, Text desc, @Nullable WorldGenerationProgressTracker tracker, boolean noRenderingBar) {
-        super(NarratorManager.EMPTY);
+        super(LiteralText.EMPTY);
         this.title = text;
         this.description = desc;
         this.listener = tracker;

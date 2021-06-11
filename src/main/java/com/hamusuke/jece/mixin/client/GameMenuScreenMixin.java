@@ -2,6 +2,7 @@ package com.hamusuke.jece.mixin.client;
 
 import com.hamusuke.jece.client.JECEClient;
 import com.hamusuke.jece.client.gui.screen.ConfirmScreenCE;
+import com.hamusuke.jece.client.gui.screen.SaveScreen;
 import com.hamusuke.jece.invoker.MinecraftServerInvoker;
 import com.hamusuke.jece.invoker.client.AbstractButtonWidgetInvoker;
 import com.hamusuke.jece.invoker.client.AdvancementsScreenInvoker;
@@ -70,29 +71,43 @@ public abstract class GameMenuScreenMixin extends Screen {
             ButtonWidget buttonWidget2 = this.addButton(new ButtonWidget(this.width / 2 - 102, this.height / 4 + 48 + 72 + (this.client.isInSingleplayer() ? 24 : 0) + -16, 204, 20, new TranslatableText("menu.returnToMenu"), (buttonWidget) -> {
                 boolean bl = this.client.isInSingleplayer();
                 boolean bl2 = this.client.isConnectedToRealms();
-                buttonWidget.active = false;
-                this.client.world.disconnect();
                 if (bl) {
-                    this.client.disconnect(new SaveLevelScreen(new TranslatableText("menu.savingLevel")));
+                    this.client.openScreen(new SaveScreen((GameMenuScreen) (Object) this, (button) -> {
+                        buttonWidget.active = false;
+                        button.active = false;
+                        this.exitClient();
+                    }, (button) -> {
+                        buttonWidget.active = false;
+                        button.active = false;
+                        this.exitClient();
+                    }, (button) -> {
+                        button.active = false;
+                        this.client.openScreen((GameMenuScreen) (Object) this);
+                    }));
                 } else {
+                    buttonWidget.active = false;
+                    this.client.world.disconnect();
                     this.client.disconnect();
                 }
 
-                if (bl) {
-                    this.client.openScreen(new TitleScreen());
-                } else if (bl2) {
+                if (bl2) {
                     RealmsBridgeScreen realmsBridgeScreen = new RealmsBridgeScreen();
                     realmsBridgeScreen.switchToRealms(new TitleScreen());
-                } else {
+                } else if (!bl) {
                     this.client.openScreen(new MultiplayerScreen(new TitleScreen()));
                 }
-
             }));
             if (!this.client.isInSingleplayer()) {
                 buttonWidget2.setMessage(new TranslatableText("menu.disconnect"));
             }
         }
         ci.cancel();
+    }
+
+    private void exitClient() {
+        this.client.world.disconnect();
+        this.client.disconnect(new SaveLevelScreen(new TranslatableText("menu.savingLevel")));
+        this.client.openScreen(new TitleScreen());
     }
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)

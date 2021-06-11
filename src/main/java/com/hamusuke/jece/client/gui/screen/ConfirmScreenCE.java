@@ -47,11 +47,11 @@ public class ConfirmScreenCE extends Screen {
         int i = this.textRenderer.fontHeight;
         this.sizeX = this.width / 3 + 16;
         this.line = this.textRenderer.wrapLines(this.subtitle, this.sizeX - 16);
-        this.sizeY = 8 + i + 8 + (this.line.size() * i) + 8 + 20 + 2 + 20 + 5;
+        this.sizeY = 8 + i + 8 + this.line.size() * i + 8 + 20 + 2 + 20 + 5;
         this.dialogX = (this.width - this.sizeX) / 2;
         this.dialogY = (this.height - this.sizeY) / 2;
-        this.addButton(new ButtonWidget(this.dialogX + 8, this.dialogY + this.sizeY - 5 - 20 - 2 - 20, this.sizeX - 16, 20, this.button1, this.run1::accept));
-        this.addButton(new ButtonWidget(this.dialogX + 8, this.dialogY + this.sizeY - 5 - 20, this.sizeX - 16, 20, this.button2, this.run2::accept));
+        int y = this.addButton(new ButtonWidget(this.dialogX + 8, this.dialogY + this.sizeY - 5 - 20, this.sizeX - 16, 20, this.button2, this.run2::accept)).y;
+        this.addButton(new ButtonWidget(this.dialogX + 8, y - 2 - 20, this.sizeX - 16, 20, this.button1, this.run1::accept));
     }
 
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {

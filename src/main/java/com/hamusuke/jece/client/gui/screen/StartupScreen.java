@@ -12,12 +12,12 @@ import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.sound.MusicType;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.ResourceTexture;
-import net.minecraft.client.util.NarratorManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.resource.DefaultResourcePack;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceReloadMonitor;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
@@ -39,7 +39,7 @@ public class StartupScreen extends Screen {
     private int counter = 1;
 
     public StartupScreen(MinecraftClient mc, ResourceReloadMonitor monitor, Consumer<Optional<Throwable>> exceptionHandler) {
-        super(NarratorManager.EMPTY);
+        super(LiteralText.EMPTY);
         this.mc = mc;
         this.reloadMonitor = monitor;
         this.exceptionHandler = exceptionHandler;

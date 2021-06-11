@@ -35,24 +35,26 @@ public class SaveScreen extends Screen {
 
     protected void init() {
         super.init();
+        this.parent.init(this.client, this.width, this.height);
+        int i = this.textRenderer.fontHeight;
         this.sizeX = this.width / 3 + 16;
         this.lines = this.textRenderer.wrapLines(new TranslatableText("menu.quit.finally"), this.sizeX - 16);
-        this.sizeY = this.height / 3 + 15 + this.lines.size() * this.textRenderer.fontHeight;
+        this.sizeY = 8 + i + 8 + this.lines.size() * i + 8 + 20 + 2 + 20 + 2 + 20 + 10;
         this.dialogX = (this.width - this.sizeX) / 2;
-        this.dialogY = (this.height - this.sizeY) / 2 + 30;
-        this.addButton(new ButtonWidget(this.dialogX + 8, (this.dialogY + this.sizeY) - 8 - 20 - 2 - 20, this.sizeX - 16, 20, new TranslatableText("gamemenu.saveandexit"), (b) -> {
-            this.client.openScreen(new ConfirmScreenCE(this, new TranslatableText("menu.game.save"), new TranslatableText("menu.game.save.desc"), new TranslatableText("gui.cancel"), new TranslatableText("gui.ok"), (btn) -> this.client.openScreen(this), (btn) -> {
-                this.client.openScreen(this.parent);
-                this.saveAndReturnToMenu.accept(b);
-            }));
-        }));
-        this.addButton(new ButtonWidget(this.dialogX + 8, (this.dialogY + this.sizeY) - 8 - 20, this.sizeX - 16, 20, new TranslatableText("gamemenu.withoutsaveandexit"), (b) -> {
+        this.dialogY = (this.height - this.sizeY) / 2;
+        int y = this.addButton(new ButtonWidget(this.dialogX + 8, this.dialogY + this.sizeY - 5 - 20, this.sizeX - 16, 20, new TranslatableText("gamemenu.withoutsaveandexit"), (b) -> {
             this.client.openScreen(new ConfirmScreenCE(this, new TranslatableText("gamemenu.withoutsaveandexit"), new TranslatableText("gamemenu.withoutsaveandexit.desc"), new TranslatableText("gui.cancel"), new TranslatableText("gui.ok"), (btn) -> this.client.openScreen(this), (btn) -> {
                 this.client.openScreen(this.parent);
                 this.withoutSaveAndReturnToMenu.accept(b);
             }));
-        }));
-        this.addButton(new ButtonWidget(this.dialogX + 8, (this.dialogY + this.sizeY) - 8 - 20 - 2 - 20 - 2 - 20, this.sizeX - 16, 20, new TranslatableText("gui.cancel"), this.cancel::accept));
+        })).y;
+        y = this.addButton(new ButtonWidget(this.dialogX + 8, y - 2 - 20, this.sizeX - 16, 20, new TranslatableText("gamemenu.saveandexit"), (b) -> {
+            this.client.openScreen(new ConfirmScreenCE(this, new TranslatableText("menu.game.save"), new TranslatableText("menu.game.save.desc"), new TranslatableText("gui.cancel"), new TranslatableText("gui.ok"), (btn) -> this.client.openScreen(this), (btn) -> {
+                this.client.openScreen(this.parent);
+                this.saveAndReturnToMenu.accept(b);
+            }));
+        })).y;
+        this.addButton(new ButtonWidget(this.dialogX + 8, y - 2 - 20, this.sizeX - 16, 20, new TranslatableText("gui.cancel"), this.cancel::accept));
     }
 
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {

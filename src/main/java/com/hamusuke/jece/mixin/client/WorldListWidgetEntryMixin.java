@@ -21,7 +21,7 @@ public class WorldListWidgetEntryMixin {
 
     @Inject(method = "method_29990", at = @At("HEAD"), cancellable = true)
     private void method_29990(CallbackInfo ci) {
-        this.client.openScreen(new ProgressBarScreen());
+        this.client.method_29970(new ProgressBarScreen());
         ci.cancel();
     }
 }

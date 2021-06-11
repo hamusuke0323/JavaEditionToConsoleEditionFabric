@@ -114,6 +114,9 @@ public abstract class MinecraftServerMixin implements MinecraftServerInvoker {
     @Shadow
     public abstract boolean isDedicated();
 
+    @Shadow
+    private long timeReference;
+
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     private void tick(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
         if (this.isDedicated()) {
@@ -145,6 +148,7 @@ public abstract class MinecraftServerMixin implements MinecraftServerInvoker {
                 if (b == 0) {
                     LOGGER.info("Autosave started");
                     this.profiler.push("autoSave");
+                    this.playerManager.sendToAll(new TitleS2CPacket(TitleS2CPacket.Action.ACTIONBAR, new TranslatableText("gui.autosave.start", 0)));
                     this.saveAll();
                     this.profiler.pop();
                     LOGGER.info("Autosave finished");
@@ -175,6 +179,7 @@ public abstract class MinecraftServerMixin implements MinecraftServerInvoker {
         PacketByteBuf packetByteBuf = PacketByteBufs.create();
         packetByteBuf.writeText(text);
         packetByteBuf.writeFloat(progress);
+        packetByteBuf.writeBoolean(this.isDedicated());
         this.playerManager.sendToAll(ServerPlayNetworking.createS2CPacket(NetworkManager.AUTO_SAVE_PACKET_ID, packetByteBuf));
     }
 
@@ -226,6 +231,7 @@ public abstract class MinecraftServerMixin implements MinecraftServerInvoker {
     private void sleep(long time) {
         try {
             Thread.sleep(time);
+            this.timeReference = Util.getMeasuringTimeMs() + 10L;
         } catch (InterruptedException e) {
         }
     }

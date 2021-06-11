@@ -7,8 +7,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
-import net.minecraft.client.util.NarratorManager;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
@@ -27,7 +27,7 @@ public class SkippableMojangLogoAnd4JStudiosLogoScreen extends Screen {
     private boolean fadeout = false;
 
     public SkippableMojangLogoAnd4JStudiosLogoScreen(TitleScreen menu) {
-        super(NarratorManager.EMPTY);
+        super(LiteralText.EMPTY);
         this.menu = menu;
     }
 

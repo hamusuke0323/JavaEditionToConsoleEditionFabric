@@ -3,6 +3,7 @@ package com.hamusuke.jece.client.options;
 import com.hamusuke.jece.client.JECEClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.BooleanOption;
 import net.minecraft.client.options.CyclingOption;
 import net.minecraft.text.Text;
@@ -28,6 +29,8 @@ public class JECEOption {
         JECEClient.jeceOptions.autoSaveTicks *= 2;
         JECEClient.jeceOptions.write();
     }, (gameOptions, cyclingOption) -> {
+        cyclingOption.setTooltip(MinecraftClient.getInstance().textRenderer.wrapLines(new TranslatableText("options.autosaveticks.desc"), 200));
+
         int l = 900;
         Text text = new TranslatableText("options.autosaveticks");
 

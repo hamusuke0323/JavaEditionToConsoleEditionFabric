@@ -3,13 +3,10 @@ package com.hamusuke.jece.server.command;
 import com.hamusuke.jece.server.JECEServer;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.TranslatableText;
 
-@Environment(EnvType.SERVER)
 public class AutoSaveCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         LiteralArgumentBuilder<ServerCommandSource> literalArgumentBuilder = CommandManager.literal("autosave").requires((source) -> source.hasPermissionLevel(2));

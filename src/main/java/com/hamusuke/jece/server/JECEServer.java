@@ -2,8 +2,6 @@ package com.hamusuke.jece.server;
 
 import com.hamusuke.jece.server.command.AutoSaveCommand;
 import net.fabricmc.api.DedicatedServerModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.LogManager;
@@ -11,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
-@Environment(EnvType.SERVER)
 public class JECEServer implements DedicatedServerModInitializer {
     private static final Logger LOGGER = LogManager.getLogger();
     public static File jeceServerConfigDir;

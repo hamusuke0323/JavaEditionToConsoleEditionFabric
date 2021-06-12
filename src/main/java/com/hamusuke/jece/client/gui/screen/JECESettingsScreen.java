@@ -11,9 +11,14 @@ import net.minecraft.client.gui.widget.ButtonListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.options.GameOptions;
 import net.minecraft.client.options.Option;
+import net.minecraft.client.util.OrderableTooltip;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class JECESettingsScreen extends Screen {
@@ -44,6 +49,10 @@ public class JECESettingsScreen extends Screen {
         this.buttonListWidget.render(matrices, mouseX, mouseY, delta);
         drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 6, 16777215);
         super.render(matrices, mouseX, mouseY, delta);
+        List<OrderedText> list = this.getHoveredButtonTooltip(mouseX, mouseY);
+        if (list != null) {
+            this.renderOrderedTooltip(matrices, list, mouseX, mouseY);
+        }
     }
 
     public void removed() {
@@ -52,5 +61,16 @@ public class JECESettingsScreen extends Screen {
 
     public void onClose() {
         this.client.openScreen(this.parent);
+    }
+
+    @Nullable
+    private List<OrderedText> getHoveredButtonTooltip(int mouseX, int mouseY) {
+        Optional<AbstractButtonWidget> optional = this.buttonListWidget.getHoveredButton(mouseX, mouseY);
+        if (optional.isPresent() && optional.get() instanceof OrderableTooltip) {
+            Optional<List<OrderedText>> optional2 = ((OrderableTooltip) optional.get()).getOrderedTooltip();
+            return optional2.orElse(null);
+        } else {
+            return null;
+        }
     }
 }

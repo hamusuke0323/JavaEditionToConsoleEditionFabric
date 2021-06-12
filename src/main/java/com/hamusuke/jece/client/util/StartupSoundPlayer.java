@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.sound.OggAudioStream;
 import net.minecraft.util.math.MathHelper;
+import org.apache.commons.compress.utils.IOUtils;
 import org.apache.logging.log4j.LogManager;
 
 import javax.sound.sampled.AudioSystem;
@@ -32,18 +33,23 @@ public class StartupSoundPlayer {
             this.clip.open(this.oggAudioStream.getFormat(), bytes, 0, bytes.length);
             this.volume = (FloatControl) this.clip.getControl(FloatControl.Type.MASTER_GAIN);
             this.clip.start();
-            this.oggAudioStream.close();
         } catch (Exception e) {
             LogManager.getLogger().warn("Failed play startup sound: {}", e.getMessage());
+        } finally {
+            IOUtils.closeQuietly(this.oggAudioStream);
         }
     }
 
     public void stop() {
-        this.clip.stop();
-        this.clip.close();
+        if (this.clip != null) {
+            this.clip.stop();
+            this.clip.close();
+        }
     }
 
     public void setVolume(float vol) {
-        this.volume.setValue(MathHelper.clamp(vol, this.volume.getMinimum(), this.volume.getMaximum()));
+        if (this.volume != null) {
+            this.volume.setValue(MathHelper.clamp(vol, this.volume.getMinimum(), this.volume.getMaximum()));
+        }
     }
 }

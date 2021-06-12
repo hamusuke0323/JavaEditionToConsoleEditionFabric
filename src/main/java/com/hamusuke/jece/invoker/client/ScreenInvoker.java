@@ -8,7 +8,7 @@ import net.minecraft.client.util.math.MatrixStack;
 public interface ScreenInvoker {
     void renderDialogWindow(MatrixStack matrices, int x, int y, int width, int height);
 
-    void renderSquare(MatrixStack matrices, int l1, int i2, int i, int k);
+    void renderSquare(MatrixStack matrices, int x, int y, int width, int height);
 
     void renderUpwardScrollIcon(MatrixStack matrices, int x, int y, float scale);
 

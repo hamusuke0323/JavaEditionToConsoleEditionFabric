@@ -3,12 +3,15 @@ package com.hamusuke.jece.server;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
+@Environment(EnvType.SERVER)
 public class JECEServerOptions {
     private final File configFilePath;
     private static final Logger LOGGER = LogManager.getLogger();

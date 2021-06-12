@@ -21,7 +21,8 @@
     "client.IntegratedServerMixin",
     "client.GameMenuScreenMixin",
     "client.AdvancementsScreenMixin",
-    "client.WorldListWidgetEntryMixin"
+    "client.WorldListWidgetEntryMixin",
+    "client.SpectatorHudMixin"
   ],
   "mixins": [
     "ServerWorldMixin",

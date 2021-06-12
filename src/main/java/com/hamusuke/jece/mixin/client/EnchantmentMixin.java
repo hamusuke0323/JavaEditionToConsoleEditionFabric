@@ -25,7 +25,7 @@ public abstract class EnchantmentMixin {
 
     @Inject(method = "getName", at = @At("HEAD"), cancellable = true)
     public void getName(int level, CallbackInfoReturnable<Text> cir) {
-        if (!JECEComparators.JECEStorage.ENCHANTMENT_BOOLEAN.get()) {
+        if (!JECEComparators.ENCHANTMENT.isJESelected()) {
             MutableText mutableText = new TranslatableText(this.getTranslationKey());
             if (this.isCursed()) {
                 mutableText.formatted(Formatting.RED);

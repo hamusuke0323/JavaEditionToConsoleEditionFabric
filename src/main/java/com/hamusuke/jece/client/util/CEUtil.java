@@ -3,7 +3,9 @@ package com.hamusuke.jece.client.util;
 import com.hamusuke.jece.JECE;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.CubeMapRenderer;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Identifier;
 
@@ -24,5 +26,9 @@ public class CEUtil {
     public static Dimension getScaledDimensionMinRatio(Dimension imageSize, Dimension boundary) {
         double ratio = Math.min(boundary.getWidth() / imageSize.getWidth(), boundary.getHeight() / imageSize.getHeight());
         return new Dimension((int) (imageSize.width * ratio), (int) (imageSize.height * ratio));
+    }
+
+    public static boolean cantRenderHotbars(MinecraftClient client) {
+        return client.currentScreen instanceof HandledScreen;
     }
 }

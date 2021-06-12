@@ -54,7 +54,7 @@ public abstract class TitleScreenMixin extends Screen {
 
     @Inject(method = "init", at = @At("HEAD"), cancellable = true)
     private void init(CallbackInfo ci) {
-        if (!JECEComparators.JECEStorage.TITLE_SCREEN_BOOLEAN.get()) {
+        if (!JECEComparators.TITLE_SCREEN.isJESelected()) {
             if (this.splashText == null) {
                 this.splashText = this.client.getSplashTextLoader().get();
             }
@@ -77,7 +77,7 @@ public abstract class TitleScreenMixin extends Screen {
 
     @Inject(method = "initWidgetsNormal", at = @At("HEAD"), cancellable = true)
     private void initWidgetsNormal(int y, int spacingY, CallbackInfo ci) {
-        if (!JECEComparators.JECEStorage.TITLE_SCREEN_BOOLEAN.get()) {
+        if (!JECEComparators.TITLE_SCREEN.isJESelected()) {
             this.addButton(new ButtonWidget(this.width / 2 - 100, y, 200, 20, new TranslatableText("menu.singleplayer"), (buttonWidget) -> this.client.openScreen(new SelectWorldScreen(this))));
             this.addButton(new ButtonWidget(this.width / 2 - 100, y + spacingY, 200, 20, new TranslatableText("menu.multiplayer"), (buttonWidget) -> this.client.openScreen(this.client.options.skipMultiplayerWarning ? new MultiplayerScreen(this) : new MultiplayerWarningScreen(this)), this.client.isMultiplayerEnabled() ? ButtonWidget.EMPTY : (buttonWidget, matrixStack, i, j) -> {
                 if (!buttonWidget.active) {
@@ -90,10 +90,9 @@ public abstract class TitleScreenMixin extends Screen {
 
     @Inject(method = "render", at = @At(value = "HEAD"), cancellable = true)
     private void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if (!JECEComparators.JECEStorage.TITLE_SCREEN_BOOLEAN.get()) {
+        if (!JECEComparators.TITLE_SCREEN.isJESelected()) {
             fill(matrices, 0, 0, this.width, this.height, -1);
             ((MinecraftClientInvoker) this.client).getPanorama().render(delta, 1.0F);
-            int i = this.width / 2 - 137;
             this.client.getTextureManager().bindTexture(CEUtil.PANORAMA_OVERLAY_CE);
             drawTexture(matrices, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);
             ((ScreenInvoker) this).renderMinecraftTitle(matrices, false);

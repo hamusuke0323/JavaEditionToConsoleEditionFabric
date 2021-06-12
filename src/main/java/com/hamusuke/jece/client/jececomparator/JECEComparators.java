@@ -1,5 +1,6 @@
 package com.hamusuke.jece.client.jececomparator;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -22,18 +23,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class JECEComparators {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Gson GSON = new Gson();
-    public static final List<JECEComparator> JECE_COMPARATORS = Lists.newArrayList();
+    private static final List<JECEComparator> JECE_COMPARATORS = Lists.newArrayList();
     public static final JECEComparator TITLE_SCREEN = registerComparator("title_screen", new Identifier(JECE.MOD_ID, "textures/gui/jeceswitcher/titlescreen.png"), 3840, 1080, "jece.switchers.titlescreen", JECEStorage.TITLE_SCREEN_BOOLEAN);
     public static final JECEComparator ENCHANTMENT = registerComparator("enchantment", new Identifier(JECE.MOD_ID, "textures/gui/jeceswitcher/enchantment.png"), 1266, 388, "jece.switchers.enchantment", JECEStorage.ENCHANTMENT_BOOLEAN);
 
     private static JECEComparator registerComparator(String id, Identifier illustration, int textureWidth, int textureHeight, String translationKey, AtomicBoolean setterGetter) {
-        checkException(id);
+        check(id);
         JECEComparator jeceComparator = new JECEComparator(id, illustration, textureWidth, textureHeight, new TranslatableText(translationKey), new TranslatableText(translationKey + ".desc"), setterGetter);
         JECE_COMPARATORS.add(jeceComparator);
         return jeceComparator;
     }
 
-    private static void checkException(String id) {
+    private static void check(String id) {
         if (id.isEmpty()) {
             throw new IllegalArgumentException("id cannot be empty!");
         } else {
@@ -80,9 +81,13 @@ public class JECEComparators {
         }
     }
 
+    public static List<JECEComparator> getJECEComparators() {
+        return ImmutableList.copyOf(JECE_COMPARATORS);
+    }
+
     @Environment(EnvType.CLIENT)
-    public static class JECEStorage {
-        public static final AtomicBoolean TITLE_SCREEN_BOOLEAN = new AtomicBoolean();
-        public static final AtomicBoolean ENCHANTMENT_BOOLEAN = new AtomicBoolean();
+    static class JECEStorage {
+        private static final AtomicBoolean TITLE_SCREEN_BOOLEAN = new AtomicBoolean();
+        private static final AtomicBoolean ENCHANTMENT_BOOLEAN = new AtomicBoolean();
     }
 }

@@ -61,11 +61,7 @@ public class JECESwitcherScreen extends Screen {
     class SwitcherList extends ElementListWidget<SwitcherList.SwitcherEntry> {
         public SwitcherList(MinecraftClient client) {
             super(client, JECESwitcherScreen.this.width, JECESwitcherScreen.this.height, 20, JECESwitcherScreen.this.height - 20, JECESwitcherScreen.this.height - 20 - 32);
-
-            for (JECEComparator defaultComparator : JECEComparators.JECE_COMPARATORS) {
-                this.addEntry(new SwitcherEntry(defaultComparator));
-            }
-
+            JECEComparators.getJECEComparators().forEach(this::addEntry);
             this.method_31322(false);
         }
 
@@ -81,9 +77,10 @@ public class JECESwitcherScreen extends Screen {
             return JECESwitcherScreen.this.getFocused() == this;
         }
 
-        protected int addEntry(SwitcherEntry entry) {
-            entry.init();
-            return super.addEntry(entry);
+        private int addEntry(JECEComparator jeceComparator) {
+            SwitcherEntry switcherEntry = new SwitcherEntry(jeceComparator);
+            switcherEntry.init();
+            return this.addEntry(switcherEntry);
         }
 
         protected void renderBackground(MatrixStack matrices) {

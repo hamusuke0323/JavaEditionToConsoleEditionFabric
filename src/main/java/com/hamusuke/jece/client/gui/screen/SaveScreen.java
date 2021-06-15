@@ -5,6 +5,7 @@ import com.hamusuke.jece.invoker.client.ScreenInvoker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
@@ -43,18 +44,26 @@ public class SaveScreen extends Screen {
         this.dialogX = (this.width - this.sizeX) / 2;
         this.dialogY = (this.height - this.sizeY) / 2;
         int y = this.addButton(new ButtonWidget(this.dialogX + 8, this.dialogY + this.sizeY - 5 - 20, this.sizeX - 16, 20, new TranslatableText("gamemenu.withoutsaveandexit"), (b) -> {
-            this.client.openScreen(new ConfirmScreenCE(this, new TranslatableText("gamemenu.withoutsaveandexit"), new TranslatableText("gamemenu.withoutsaveandexit.desc"), new TranslatableText("gui.cancel"), new TranslatableText("gui.ok"), (btn) -> this.client.openScreen(this), (btn) -> {
-                this.client.openScreen(this.parent);
-                this.withoutSaveAndReturnToMenu.accept(b);
+            this.client.openScreen(new ConfirmScreenCE(this, new TranslatableText("gamemenu.withoutsaveandexit"), new TranslatableText("gamemenu.withoutsaveandexit.desc"), (bool) -> {
+                if (bool) {
+                    this.client.openScreen(this.parent);
+                    this.withoutSaveAndReturnToMenu.accept(b);
+                } else {
+                    this.client.openScreen(this);
+                }
             }));
         })).y;
         y = this.addButton(new ButtonWidget(this.dialogX + 8, y - 2 - 20, this.sizeX - 16, 20, new TranslatableText("gamemenu.saveandexit"), (b) -> {
-            this.client.openScreen(new ConfirmScreenCE(this, new TranslatableText("menu.game.save"), new TranslatableText("menu.game.save.desc"), new TranslatableText("gui.cancel"), new TranslatableText("gui.ok"), (btn) -> this.client.openScreen(this), (btn) -> {
-                this.client.openScreen(this.parent);
-                this.saveAndReturnToMenu.accept(b);
+            this.client.openScreen(new ConfirmScreenCE(this, new TranslatableText("menu.game.save"), new TranslatableText("menu.game.save.desc"), (bool) -> {
+                if (bool) {
+                    this.client.openScreen(this.parent);
+                    this.saveAndReturnToMenu.accept(b);
+                } else {
+                    this.client.openScreen(this);
+                }
             }));
         })).y;
-        this.addButton(new ButtonWidget(this.dialogX + 8, y - 2 - 20, this.sizeX - 16, 20, new TranslatableText("gui.cancel"), this.cancel::accept));
+        this.addButton(new ButtonWidget(this.dialogX + 8, y - 2 - 20, this.sizeX - 16, 20, ScreenTexts.CANCEL, this.cancel::accept));
     }
 
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {

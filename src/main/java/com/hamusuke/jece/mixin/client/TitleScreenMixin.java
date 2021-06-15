@@ -1,5 +1,6 @@
 package com.hamusuke.jece.mixin.client;
 
+import com.hamusuke.jece.client.gui.screen.HowToPlayAndOptionsScreen;
 import com.hamusuke.jece.client.jececomparator.JECEComparators;
 import com.hamusuke.jece.client.gui.screen.ConfirmScreenCE;
 import com.hamusuke.jece.invoker.client.MinecraftClientInvoker;
@@ -13,7 +14,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerWarningScreen;
-import net.minecraft.client.gui.screen.options.OptionsScreen;
 import net.minecraft.client.gui.screen.world.SelectWorldScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
@@ -68,8 +68,14 @@ public abstract class TitleScreenMixin extends Screen {
                 this.initWidgetsNormal(i, 24);
             }
 
-            this.addButton(new ButtonWidget(this.width / 2 - 100, i + 48, 200, 20, new TranslatableText("menu.options"), (buttonWidget) -> this.client.openScreen(new OptionsScreen(this, this.client.options))));
-            this.addButton(new ButtonWidget(this.width / 2 - 100, i + 48 + 24, 200, 20, new TranslatableText("menu.quit"), (buttonWidget) -> this.client.openScreen(new ConfirmScreenCE((TitleScreen) (Object) this, new TranslatableText("menu.quit"), new TranslatableText("jece.menu.quit.message"), (b) -> this.client.openScreen((TitleScreen) (Object) this), (b) -> this.client.scheduleStop()))));
+            this.addButton(new ButtonWidget(this.width / 2 - 100, i + 48, 200, 20, new TranslatableText("menu.options"), (buttonWidget) -> this.client.openScreen(new HowToPlayAndOptionsScreen(this))));
+            this.addButton(new ButtonWidget(this.width / 2 - 100, i + 48 + 24, 200, 20, new TranslatableText("menu.quit"), (buttonWidget) -> this.client.openScreen(new ConfirmScreenCE((TitleScreen) (Object) this, new TranslatableText("menu.quit"), new TranslatableText("jece.menu.quit.message"), (bool) -> {
+                if (bool) {
+                    this.client.scheduleStop();
+                }
+
+                this.client.openScreen((TitleScreen) (Object) this);
+            }))));
             this.client.setConnectedToRealms(false);
             ci.cancel();
         }

@@ -22,7 +22,8 @@
     "client.GameMenuScreenMixin",
     "client.AdvancementsScreenMixin",
     "client.WorldListWidgetEntryMixin",
-    "client.SpectatorHudMixin"
+    "client.SpectatorHudMixin",
+    "client.SlotMixin"
   ],
   "mixins": [
     "ServerWorldMixin",

@@ -23,7 +23,11 @@
     "client.AdvancementsScreenMixin",
     "client.WorldListWidgetEntryMixin",
     "client.SpectatorHudMixin",
-    "client.SlotMixin"
+    "client.SlotMixin",
+    "client.KeyboardInputMixin",
+    "client.ElementMixin",
+    "client.ParentElementMixin",
+    "client.KeyBindingMixin"
   ],
   "mixins": [
     "ServerWorldMixin",

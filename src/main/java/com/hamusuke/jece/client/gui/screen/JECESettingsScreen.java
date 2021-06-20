@@ -41,6 +41,11 @@ public class JECESettingsScreen extends Screen {
                 return new ButtonWidget(x, y, width, 20, this.getDisplayPrefix(), (button) -> JECESettingsScreen.this.client.openScreen(new JECESwitcherScreen(JECESettingsScreen.this)));
             }
         });
+        this.buttonListWidget.addSingleOptionEntry(new Option("controls.title") {
+            public AbstractButtonWidget createButton(GameOptions options, int x, int y, int width) {
+                return new ButtonWidget(x, y, width, 20, this.getDisplayPrefix(), (button) -> JECESettingsScreen.this.client.openScreen(new ControlsOptionsScreen(JECESettingsScreen.this)));
+            }
+        });
         this.children.add(this.buttonListWidget);
         this.addButton(new ButtonWidget(this.width / 4, this.height - 20, this.width / 2, 20, ScreenTexts.DONE, (button) -> this.onClose()));
     }

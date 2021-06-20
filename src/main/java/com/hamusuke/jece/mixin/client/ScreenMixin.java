@@ -12,9 +12,11 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.ParentElement;
 import net.minecraft.client.gui.hud.BackgroundHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.*;
+import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.util.Identifier;
@@ -33,7 +35,7 @@ import static com.hamusuke.jece.client.util.CEUtil.DIALOG_WINDOW;
 
 @Mixin(Screen.class)
 @Environment(EnvType.CLIENT)
-public abstract class ScreenMixin extends DrawableHelper implements ScreenInvoker {
+public abstract class ScreenMixin extends DrawableHelper implements ScreenInvoker, ParentElement {
     private static final Identifier CREATIVE_INVENTORY_TABS = new Identifier("textures/gui/container/creative_inventory/tabs.png");
     private static final Identifier MINECRAFT_TITLE_TEXTURES_CE = new Identifier(JECE.MOD_ID, "textures/gui/title/minecraft.png");
     private static final Identifier MINECRAFT_TITLE_EDITION_CE = new Identifier(JECE.MOD_ID, "textures/gui/title/edition.png");
@@ -53,6 +55,12 @@ public abstract class ScreenMixin extends DrawableHelper implements ScreenInvoke
 
     @Shadow
     public abstract void renderBackground(MatrixStack matrices);
+
+    @Shadow
+    public abstract boolean shouldCloseOnEsc();
+
+    @Shadow
+    public abstract void onClose();
 
     @Inject(method = "renderBackground(Lnet/minecraft/client/util/math/MatrixStack;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;fillGradient(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"), cancellable = true)
     public void renderBackground(MatrixStack matrices, int vOffset, CallbackInfo ci) {
@@ -212,6 +220,16 @@ public abstract class ScreenMixin extends DrawableHelper implements ScreenInvoke
             this.client.openScreen(new JECESettingsScreen(this.client.currentScreen));
             cir.setReturnValue(true);
             cir.cancel();
+        }
+    }
+
+    public boolean joystickButtonPressed(int key) {
+        if (key == 0 && this.shouldCloseOnEsc()) {
+            this.client.getSoundManager().play(PositionedSoundInstance.master(JECEClient.UI_BACKBUTTON_CLICK, 1.0F));
+            this.onClose();
+            return true;
+        } else {
+            return false;
         }
     }
 }

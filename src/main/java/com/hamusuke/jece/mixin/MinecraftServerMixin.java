@@ -225,7 +225,7 @@ public abstract class MinecraftServerMixin implements MinecraftServerInvoker {
 
         this.sendToAll(new TranslatableText("menu.savelevel.finally"), 0.0F);
         this.sleep(1500L);
-        this.playerManager.sendToAll(ServerPlayNetworking.createS2CPacket(NetworkManager.AUTO_SAVE_END_PACKET_ID, PacketByteBufs.create()));
+        this.playerManager.sendToAll(ServerPlayNetworking.createS2CPacket(NetworkManager.AUTO_SAVE_END_PACKET_ID, PacketByteBufs.empty()));
     }
 
     private void sleep(long time) {

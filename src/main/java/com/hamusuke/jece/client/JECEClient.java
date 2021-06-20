@@ -1,18 +1,23 @@
 package com.hamusuke.jece.client;
 
 import com.hamusuke.jece.JECE;
+import com.hamusuke.jece.client.event.KeyboardInputTickEvent;
 import com.hamusuke.jece.client.gui.screen.JECESettingsScreen;
 import com.hamusuke.jece.client.gui.screen.ProgressBarScreen;
 import com.hamusuke.jece.client.jececomparator.JECEComparators;
+import com.hamusuke.jece.client.joystick.JoystickInputUtil;
+import com.hamusuke.jece.client.joystick.JoystickWorker;
 import com.hamusuke.jece.client.options.JECEOptions;
 import com.hamusuke.jece.network.NetworkManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.sound.SoundEvent;
@@ -40,6 +45,7 @@ public class JECEClient implements ClientModInitializer {
     public static File jeceConfigDir;
     public static JECEOptions jeceOptions;
     private static final AtomicReference<Screen> current = new AtomicReference<>();
+    public static final AtomicReference<JoystickWorker> joystickWorker = new AtomicReference<>();
 
     public void onInitializeClient() {
         jeceConfigDir = FabricLoader.getInstance().getConfigDir().resolve("jece").toFile();
@@ -89,5 +95,34 @@ public class JECEClient implements ClientModInitializer {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(NetworkManager.AUTO_SAVE_END_PACKET_ID, (client, handler, buf, responseSender) -> client.send(() -> client.openScreen(current.get())));
+
+        ClientLifecycleEvents.CLIENT_STOPPING.register((client) -> {
+            if (joystickWorker.get() != null) {
+                joystickWorker.get().close();
+            }
+        });
+
+        KeyboardInputTickEvent.EVENT.register((input, slowDown) -> {
+            MinecraftClient client = MinecraftClient.getInstance();
+            boolean forward = joystickWorker.get() != null && client.currentScreen == null && JoystickInputUtil.isStickForward(joystickWorker.get().getStickId());
+            boolean back = joystickWorker.get() != null && client.currentScreen == null && JoystickInputUtil.isStickBack(joystickWorker.get().getStickId());
+            boolean left = joystickWorker.get() != null && client.currentScreen == null && JoystickInputUtil.isStickLeft(joystickWorker.get().getStickId());
+            boolean right = joystickWorker.get() != null && client.currentScreen == null && JoystickInputUtil.isStickRight(joystickWorker.get().getStickId());
+            input.pressingForward = forward;
+            input.pressingBack = back;
+            input.pressingLeft = left;
+            input.pressingRight = right;
+            float y = joystickWorker.get() != null ? -JoystickInputUtil.getStickAxes(joystickWorker.get().getStickId(), 1) : 0.0F;
+            float x = joystickWorker.get() != null ? -JoystickInputUtil.getStickAxes(joystickWorker.get().getStickId(), 0) : 0.0F;
+            input.movementForward = forward ? y : back ? y : input.movementForward;
+            input.movementSideways = left ? x : right ? x : input.movementSideways;
+            input.jumping = client.options.keyJump.isPressed() || jeceOptions.keyJump.isPressed();
+            input.sneaking = client.options.keySneak.isPressed() || jeceOptions.keySneak.isPressed();
+
+            if (slowDown) {
+                input.movementSideways *= 0.3F;
+                input.movementForward *= 0.3F;
+            }
+        });
     }
 }

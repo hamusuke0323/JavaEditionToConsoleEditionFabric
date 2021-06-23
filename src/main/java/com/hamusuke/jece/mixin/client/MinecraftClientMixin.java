@@ -197,7 +197,7 @@ public abstract class MinecraftClientMixin extends ReentrantThreadExecutor<Runna
     }
 
     @ModifyArg(method = "startIntegratedServer(Ljava/lang/String;Lnet/minecraft/util/registry/DynamicRegistryManager$Impl;Ljava/util/function/Function;Lcom/mojang/datafixers/util/Function4;ZLnet/minecraft/client/MinecraftClient$WorldLoadAction;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;openScreen(Lnet/minecraft/client/gui/screen/Screen;)V"), index = 0)
-    private Screen startIntegratedServerI(Screen screenIn) {
+    private Screen startIntegratedServer(Screen screenIn) {
         if (screenIn instanceof LevelLoadingScreen) {
             ProgressBarScreen progressBarScreen;
             if (this.isCreateWorld) {

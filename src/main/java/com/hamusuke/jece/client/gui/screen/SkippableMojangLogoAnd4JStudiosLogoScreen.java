@@ -17,14 +17,12 @@ public class SkippableMojangLogoAnd4JStudiosLogoScreen extends Screen {
     private final TitleScreen menu;
     private static final Identifier MOJANG = new Identifier(JECE.MOD_ID, "textures/gui/title/startupframes/mojang.png");
     private static final Identifier FourJSTUDIOS = new Identifier(JECE.MOD_ID, "textures/gui/title/startupframes/4jstudios.png");
-
-    private final float IncOrDecSize = 0.02F;
-    private final int waitSize = 160;
-
+    private static final float IncOrDecSize = 0.02F;
+    private static final int waitSize = 160;
     private float fade = 0.0F;
     private int timer = 0;
-    private boolean showedMojangLogo = false;
-    private boolean fadeout = false;
+    private boolean showedMojangLogo;
+    private boolean fadeout;
 
     public SkippableMojangLogoAnd4JStudiosLogoScreen(TitleScreen menu) {
         super(LiteralText.EMPTY);
@@ -41,15 +39,15 @@ public class SkippableMojangLogoAnd4JStudiosLogoScreen extends Screen {
             RenderSystem.color4f(f, f, f, f);
             this.client.getTextureManager().bindTexture(MOJANG);
             drawTexture(matrices, 0, 0, this.width, this.height, 0.0F, 0.0F, 1920, 1080, 1920, 1080);
-            if (this.fade >= 1.0F && this.timer >= this.waitSize) {
+            if (this.fade >= 1.0F && this.timer >= waitSize) {
                 this.showedMojangLogo = true;
                 this.fadeout = false;
-                this.fade = f = 0.0F;
+                this.fade = 0.0F;
                 this.timer = 0;
             } else if (this.fade >= 1.0F) {
                 this.timer++;
             } else {
-                this.fade += this.IncOrDecSize;
+                this.fade += IncOrDecSize;
             }
         } else {
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, f);
@@ -60,12 +58,12 @@ public class SkippableMojangLogoAnd4JStudiosLogoScreen extends Screen {
                 this.onClose();
             }
 
-            if (this.fade >= 1.0F && this.timer >= this.waitSize) {
+            if (this.fade >= 1.0F && this.timer >= waitSize) {
                 this.fadeout = true;
             } else if (this.fade >= 1.0F) {
                 this.timer++;
             } else {
-                this.fade += this.IncOrDecSize;
+                this.fade += IncOrDecSize;
             }
         }
         RenderSystem.popMatrix();

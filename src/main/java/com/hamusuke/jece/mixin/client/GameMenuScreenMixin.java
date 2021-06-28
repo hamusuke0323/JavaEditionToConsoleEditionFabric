@@ -59,8 +59,10 @@ public abstract class GameMenuScreenMixin extends Screen {
                     if (integratedServer != null) {
                         this.client.openScreen(new ConfirmScreenCE(this, new TranslatableText("menu.game.save"), new TranslatableText("menu.game.save.desc"), (bool) -> {
                             if (bool) {
-                                this.client.openScreen(this);
-                                integratedServer.execute(((MinecraftServerInvoker) integratedServer)::saveAll);
+                                integratedServer.execute(() -> {
+                                    ((MinecraftServerInvoker) integratedServer).saveAll();
+                                    this.client.send(() -> this.client.openScreen(this));
+                                });
                             }
 
                             this.client.openScreen(this);

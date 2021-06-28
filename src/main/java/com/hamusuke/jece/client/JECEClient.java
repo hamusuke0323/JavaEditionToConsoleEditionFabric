@@ -18,7 +18,6 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
@@ -28,7 +27,7 @@ import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
+import java.io.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Environment(EnvType.CLIENT)
@@ -44,7 +43,6 @@ public class JECEClient implements ClientModInitializer {
     public static KeyBinding OPEN_SETTINGS_SCREEN;
     public static File jeceConfigDir;
     public static JECEOptions jeceOptions;
-    private static final AtomicReference<Screen> current = new AtomicReference<>();
     public static final AtomicReference<JoystickWorker> joystickWorker = new AtomicReference<>();
 
     public void onInitializeClient() {
@@ -70,10 +68,9 @@ public class JECEClient implements ClientModInitializer {
             }
         });
 
+        ClientPlayNetworking.registerGlobalReceiver(NetworkManager.AUTO_SAVE_WILL_START_PACKET_ID, (client, handler, buf, responseSender) -> client.send(() -> client.openScreen(null)));
+
         ClientPlayNetworking.registerGlobalReceiver(NetworkManager.AUTO_SAVE_PACKET_ID, (client, handler, buf, responseSender) -> {
-            if (!(client.currentScreen instanceof ProgressBarScreen)) {
-                current.set(client.currentScreen);
-            }
             Text saveLevel = new TranslatableText("menu.savelevel");
             Text text = buf.readText();
             float progress = buf.readFloat();
@@ -94,7 +91,7 @@ public class JECEClient implements ClientModInitializer {
             }
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(NetworkManager.AUTO_SAVE_END_PACKET_ID, (client, handler, buf, responseSender) -> client.send(() -> client.openScreen(current.get())));
+        ClientPlayNetworking.registerGlobalReceiver(NetworkManager.AUTO_SAVE_END_PACKET_ID, (client, handler, buf, responseSender) -> client.send(() -> client.openScreen(null)));
 
         ClientLifecycleEvents.CLIENT_STOPPING.register((client) -> {
             if (joystickWorker.get() != null) {

@@ -22,6 +22,7 @@ import net.minecraft.client.gui.screen.LevelLoadingScreen;
 import net.minecraft.client.gui.screen.Overlay;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.SplashScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.screen.multiplayer.SocialInteractionsScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -31,6 +32,8 @@ import net.minecraft.client.options.GameOptions;
 import net.minecraft.client.options.Perspective;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.WorldRenderer;
+import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.sound.SoundManager;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.client.toast.TutorialToast;
@@ -38,6 +41,7 @@ import net.minecraft.client.tutorial.TutorialManager;
 import net.minecraft.client.util.NarratorManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.resource.DefaultResourcePack;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -149,6 +153,9 @@ public abstract class MinecraftClientMixin extends ReentrantThreadExecutor<Runna
     @Shadow
     public abstract ToastManager getToastManager();
 
+    @Shadow
+    @Final
+    private SoundManager soundManager;
     private RotatingCubeMapRenderer panorama;
     private StartupSoundPlayer startupSoundPlayer;
     private boolean isCreateWorld;
@@ -193,6 +200,13 @@ public abstract class MinecraftClientMixin extends ReentrantThreadExecutor<Runna
                 LOGGER.warn("StartupSound not found, return null!");
             }
             this.openScreen(new StartupScreen((MinecraftClient) (Object) this, invoker.getResourceReloadMonitor(), invoker.getExceptionHandler()));
+        }
+    }
+
+    @Inject(method = "openScreen", at = @At("HEAD"))
+    private void openScreen(@Nullable Screen screen, CallbackInfo ci) {
+        if (screen instanceof HandledScreen) {
+            this.soundManager.play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
         }
     }
 
@@ -249,7 +263,7 @@ public abstract class MinecraftClientMixin extends ReentrantThreadExecutor<Runna
     }
 
     @Inject(method = "handleInputEvents", at = @At("HEAD"))
-    private void handleInputEvents(CallbackInfo ci) {
+    private void handleJoystickInputEvents(CallbackInfo ci) {
         for (; JECEClient.jeceOptions.keyTogglePerspective.wasPressed(); this.worldRenderer.scheduleTerrainUpdate()) {
             Perspective perspective = this.options.getPerspective();
             this.options.setPerspective(this.options.getPerspective().next());
@@ -319,7 +333,7 @@ public abstract class MinecraftClientMixin extends ReentrantThreadExecutor<Runna
         }
 
         if (this.player.isUsingItem()) {
-            if (!JECEClient.jeceOptions.keyUse.isPressed()) {
+            if (!this.options.keyUse.isPressed() && !JECEClient.jeceOptions.keyUse.isPressed()) {
                 this.interactionManager.stopUsingItem(this.player);
             }
 
@@ -354,7 +368,10 @@ public abstract class MinecraftClientMixin extends ReentrantThreadExecutor<Runna
         if (JECEClient.jeceOptions.keyUse.isPressed() && this.itemUseCooldown == 0 && !this.player.isUsingItem()) {
             this.doItemUse();
         }
+    }
 
-        this.handleBlockBreaking(this.currentScreen == null && JECEClient.jeceOptions.keyAttack.isPressed() && this.mouse.isCursorLocked());
+    @ModifyArg(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V"), index = 0)
+    private boolean modifyHandleBlockBreaking(boolean bl) {
+        return this.currentScreen == null && (this.options.keyAttack.isPressed() || JECEClient.jeceOptions.keyAttack.isPressed()) && this.mouse.isCursorLocked();
     }
 }

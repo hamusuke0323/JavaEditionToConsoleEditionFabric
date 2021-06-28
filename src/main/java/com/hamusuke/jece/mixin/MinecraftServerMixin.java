@@ -149,7 +149,9 @@ public abstract class MinecraftServerMixin implements MinecraftServerInvoker {
                     LOGGER.info("Autosave started");
                     this.profiler.push("autoSave");
                     this.playerManager.sendToAll(new TitleS2CPacket(TitleS2CPacket.Action.ACTIONBAR, new TranslatableText("gui.autosave.start", 0)));
+                    this.playerManager.sendToAll(ServerPlayNetworking.createS2CPacket(NetworkManager.AUTO_SAVE_WILL_START_PACKET_ID, PacketByteBufs.empty()));
                     this.saveAll();
+                    this.playerManager.sendToAll(ServerPlayNetworking.createS2CPacket(NetworkManager.AUTO_SAVE_END_PACKET_ID, PacketByteBufs.empty()));
                     this.profiler.pop();
                     LOGGER.info("Autosave finished");
                 }
@@ -225,7 +227,6 @@ public abstract class MinecraftServerMixin implements MinecraftServerInvoker {
 
         this.sendToAll(new TranslatableText("menu.savelevel.finally"), 0.0F);
         this.sleep(1500L);
-        this.playerManager.sendToAll(ServerPlayNetworking.createS2CPacket(NetworkManager.AUTO_SAVE_END_PACKET_ID, PacketByteBufs.empty()));
     }
 
     private void sleep(long time) {

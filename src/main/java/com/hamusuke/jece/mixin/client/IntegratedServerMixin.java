@@ -2,11 +2,14 @@ package com.hamusuke.jece.mixin.client;
 
 import com.hamusuke.jece.client.JECEClient;
 import com.hamusuke.jece.invoker.MinecraftServerInvoker;
+import com.hamusuke.jece.network.NetworkManager;
 import com.mojang.authlib.GameProfileRepository;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.datafixers.DataFixer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
 import net.minecraft.resource.ResourcePackManager;
@@ -74,7 +77,9 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
                     LOGGER.info("Autosave started");
                     profiler.push("autoSave");
                     this.getPlayerManager().sendToAll(new TitleS2CPacket(TitleS2CPacket.Action.ACTIONBAR, new TranslatableText("gui.autosave.start", 0)));
+                    this.getPlayerManager().sendToAll(ServerPlayNetworking.createS2CPacket(NetworkManager.AUTO_SAVE_WILL_START_PACKET_ID, PacketByteBufs.empty()));
                     ((MinecraftServerInvoker) this).saveAll();
+                    this.getPlayerManager().sendToAll(ServerPlayNetworking.createS2CPacket(NetworkManager.AUTO_SAVE_END_PACKET_ID, PacketByteBufs.empty()));
                     profiler.pop();
                     LOGGER.info("Autosave finished");
                 }

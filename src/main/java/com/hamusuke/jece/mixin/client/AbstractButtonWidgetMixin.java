@@ -4,9 +4,11 @@ import com.hamusuke.jece.client.JECEClient;
 import com.hamusuke.jece.invoker.client.AbstractButtonWidgetInvoker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundManager;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -23,11 +25,20 @@ public class AbstractButtonWidgetMixin implements AbstractButtonWidgetInvoker {
     @Shadow
     private Text message;
 
+    @Shadow
+    public boolean active;
     @Nullable
     private SoundEvent onPressSound;
 
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/AbstractButtonWidget;queueNarration(I)V"))
+    private void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        if (this.active) {
+            MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(JECEClient.UI_BUTTON_HOVER, 1.0F));
+        }
+    }
+
     @Inject(method = "playDownSound", at = @At("HEAD"), cancellable = true)
-    public void playDownSound(SoundManager soundManager, CallbackInfo ci) {
+    private void playDownSound(SoundManager soundManager, CallbackInfo ci) {
         if (this.onPressSound == null) {
             if (this.message instanceof TranslatableText) {
                 String key = ((TranslatableText) this.message).getKey();

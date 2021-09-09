@@ -17,19 +17,18 @@ import org.apache.logging.log4j.Logger;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Environment(EnvType.CLIENT)
 public class JECEComparators {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Gson GSON = new Gson();
     private static final List<JECEComparator> JECE_COMPARATORS = Lists.newArrayList();
-    public static final JECEComparator TITLE_SCREEN = registerComparator("title_screen", new Identifier(JECE.MOD_ID, "textures/gui/jeceswitcher/titlescreen.png"), 3840, 1080, "jece.switchers.titlescreen", JECEStorage.TITLE_SCREEN_BOOLEAN);
-    public static final JECEComparator ENCHANTMENT = registerComparator("enchantment", new Identifier(JECE.MOD_ID, "textures/gui/jeceswitcher/enchantment.png"), 1266, 388, "jece.switchers.enchantment", JECEStorage.ENCHANTMENT_BOOLEAN);
+    public static final JECEComparator TITLE_SCREEN = registerComparator("title_screen", new Identifier(JECE.MOD_ID, "textures/gui/jeceswitcher/titlescreen.png"), 3840, 1080, "jece.switchers.titlescreen");
+    public static final JECEComparator ENCHANTMENT = registerComparator("enchantment", new Identifier(JECE.MOD_ID, "textures/gui/jeceswitcher/enchantment.png"), 1266, 388, "jece.switchers.enchantment");
 
-    private static JECEComparator registerComparator(String id, Identifier illustration, int textureWidth, int textureHeight, String translationKey, AtomicBoolean setterGetter) {
+    private static JECEComparator registerComparator(String id, Identifier illustration, int textureWidth, int textureHeight, String translationKey) {
         check(id);
-        JECEComparator jeceComparator = new JECEComparator(id, illustration, textureWidth, textureHeight, new TranslatableText(translationKey), new TranslatableText(translationKey + ".desc"), setterGetter);
+        JECEComparator jeceComparator = new JECEComparator(id, illustration, textureWidth, textureHeight, new TranslatableText(translationKey), new TranslatableText(translationKey + ".desc"));
         JECE_COMPARATORS.add(jeceComparator);
         return jeceComparator;
     }
@@ -83,11 +82,5 @@ public class JECEComparators {
 
     public static List<JECEComparator> getJECEComparators() {
         return ImmutableList.copyOf(JECE_COMPARATORS);
-    }
-
-    @Environment(EnvType.CLIENT)
-    static class JECEStorage {
-        private static final AtomicBoolean TITLE_SCREEN_BOOLEAN = new AtomicBoolean();
-        private static final AtomicBoolean ENCHANTMENT_BOOLEAN = new AtomicBoolean();
     }
 }

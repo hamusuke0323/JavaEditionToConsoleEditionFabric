@@ -16,7 +16,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.resource.DefaultResourcePack;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceReloadMonitor;
-import net.minecraft.resource.ResourceType;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -126,10 +125,11 @@ public class StartupScreen extends Screen {
         }
 
         protected ResourceTexture.TextureData loadTextureData(ResourceManager resourceManager) {
-            MinecraftClient minecraft = MinecraftClient.getInstance();
-            DefaultResourcePack vanillaPack = minecraft.getResourcePackDownloader().getPack();
+            try (InputStream inputstream = DefaultResourcePack.class.getResourceAsStream("/assets/" + this.location.getNamespace() + "/" + this.location.getPath())) {
+                if (inputstream == null) {
+                    throw new IOException(this.location + " is null");
+                }
 
-            try (InputStream inputstream = vanillaPack.open(ResourceType.CLIENT_RESOURCES, this.location)) {
                 return new TextureData(null, NativeImage.read(inputstream));
             } catch (IOException ioexception1) {
                 return new ResourceTexture.TextureData(ioexception1);

@@ -22,7 +22,7 @@ public class SpectatorHudMixin {
 
     @Inject(method = "render(Lnet/minecraft/client/util/math/MatrixStack;)V", at = @At("HEAD"), cancellable = true)
     private void render(MatrixStack matrixStack, CallbackInfo ci) {
-        if (CEUtil.cantRenderHotbars(this.client)) {
+        if (CEUtil.cannotRenderHotbars(this.client)) {
             ci.cancel();
         }
     }

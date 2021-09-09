@@ -1,7 +1,6 @@
 package com.hamusuke.jece.client.jececomparator;
 
 import com.hamusuke.jece.client.util.CEUtil;
-import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -15,7 +14,6 @@ import net.minecraft.util.Identifier;
 import java.awt.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.BooleanSupplier;
 
 @Environment(EnvType.CLIENT)
 public class JECEComparator {
@@ -27,18 +25,15 @@ public class JECEComparator {
     private final Text description;
     private static final Text je = new TranslatableText("jece.switcher.je");
     private static final Text ce = new TranslatableText("jece.switcher.ce");
-    private final BooleanConsumer onPress;
-    private final BooleanSupplier booleanSupplier;
+    private final AtomicBoolean value = new AtomicBoolean();
 
-    public JECEComparator(String id, Identifier illustration, int textureWidth, int textureHeight, Text title, Text description, AtomicBoolean setterGetter) {
+    public JECEComparator(String id, Identifier illustration, int textureWidth, int textureHeight, Text title, Text description) {
         this.id = id;
         this.illustration = illustration;
         this.textureWidth = textureWidth;
         this.textureHeight = textureHeight;
         this.title = title;
         this.description = description;
-        this.onPress = setterGetter::set;
-        this.booleanSupplier = setterGetter::get;
     }
 
     public void render(MinecraftClient client, MatrixStack matrices, int rowLeft, int rowTop, int rowWidth, int rowHeight) {
@@ -65,20 +60,20 @@ public class JECEComparator {
     }
 
     public void set(boolean bool) {
-        this.onPress.accept(bool);
+        this.value.set(bool);
     }
 
     public void onPressUseJE() {
-        this.onPress.accept(true);
+        this.set(true);
         JECEComparators.write();
     }
 
     public void onPressUseCE() {
-        this.onPress.accept(false);
+        this.set(false);
         JECEComparators.write();
     }
 
     public boolean isJESelected() {
-        return this.booleanSupplier.getAsBoolean();
+        return this.value.get();
     }
 }

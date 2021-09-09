@@ -28,7 +28,7 @@ public class CEUtil {
         return new Dimension((int) (imageSize.width * ratio), (int) (imageSize.height * ratio));
     }
 
-    public static boolean cantRenderHotbars(MinecraftClient client) {
+    public static boolean cannotRenderHotbars(MinecraftClient client) {
         return client.currentScreen instanceof HandledScreen;
     }
 }

@@ -46,7 +46,7 @@ public abstract class InGameHudMixin {
 
     @Inject(method = "renderHeldItemTooltip", at = @At("HEAD"), cancellable = true)
     public void renderHeldItemTooltip(MatrixStack matrices, CallbackInfo ci) {
-        if (CEUtil.cantRenderHotbars(this.client)) {
+        if (CEUtil.cannotRenderHotbars(this.client)) {
             ci.cancel();
             return;
         }
@@ -91,35 +91,35 @@ public abstract class InGameHudMixin {
 
     @Inject(method = "renderHotbar", at = @At("HEAD"), cancellable = true)
     private void renderHotbar(float tickDelta, MatrixStack matrices, CallbackInfo ci) {
-        if (CEUtil.cantRenderHotbars(this.client)) {
+        if (CEUtil.cannotRenderHotbars(this.client)) {
             ci.cancel();
         }
     }
 
     @Inject(method = "renderStatusBars", at = @At("HEAD"), cancellable = true)
     private void renderStatusBars(MatrixStack matrices, CallbackInfo ci) {
-        if (CEUtil.cantRenderHotbars(this.client)) {
+        if (CEUtil.cannotRenderHotbars(this.client)) {
             ci.cancel();
         }
     }
 
     @Inject(method = "renderMountHealth", at = @At("HEAD"), cancellable = true)
     private void renderMountHealth(MatrixStack matrices, CallbackInfo ci) {
-        if (CEUtil.cantRenderHotbars(this.client)) {
+        if (CEUtil.cannotRenderHotbars(this.client)) {
             ci.cancel();
         }
     }
 
     @Inject(method = "renderMountJumpBar", at = @At("HEAD"), cancellable = true)
     private void renderMountJumpBar(MatrixStack matrices, int x, CallbackInfo ci) {
-        if (CEUtil.cantRenderHotbars(this.client)) {
+        if (CEUtil.cannotRenderHotbars(this.client)) {
             ci.cancel();
         }
     }
 
     @Inject(method = "renderExperienceBar", at = @At("HEAD"), cancellable = true)
     private void renderExperienceBar(MatrixStack matrices, int x, CallbackInfo ci) {
-        if (CEUtil.cantRenderHotbars(this.client)) {
+        if (CEUtil.cannotRenderHotbars(this.client)) {
             ci.cancel();
         }
     }

@@ -6,10 +6,10 @@ import com.hamusuke.jece.client.gui.screen.ProgressBarScreen;
 import com.hamusuke.jece.client.gui.screen.StartupScreen;
 import com.hamusuke.jece.client.joystick.JoystickListener;
 import com.hamusuke.jece.client.joystick.JoystickWorker;
-import com.hamusuke.jece.invoker.client.MinecraftClientInvoker;
-import com.hamusuke.jece.invoker.client.SplashScreenInvoker;
 import com.hamusuke.jece.client.util.CEUtil;
 import com.hamusuke.jece.client.util.StartupSoundPlayer;
+import com.hamusuke.jece.invoker.client.MinecraftClientInvoker;
+import com.hamusuke.jece.invoker.client.SplashScreenInvoker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -144,9 +144,6 @@ public abstract class MinecraftClientMixin extends ReentrantThreadExecutor<Runna
     private int itemUseCooldown;
 
     @Shadow
-    protected abstract void handleBlockBreaking(boolean bl);
-
-    @Shadow
     @Final
     public Mouse mouse;
 
@@ -186,8 +183,8 @@ public abstract class MinecraftClientMixin extends ReentrantThreadExecutor<Runna
 
         if (JECEClient.isFirst && this.overlay instanceof SplashScreen) {
             SplashScreenInvoker invoker = (SplashScreenInvoker) this.overlay;
-            StartupScreen.loadStartupTextures((MinecraftClient) (Object) this);
             this.setOverlay(null);
+            StartupScreen.loadStartupTextures((MinecraftClient) (Object) this);
             InputStream inputStream = DefaultResourcePack.class.getResourceAsStream("/assets/" + JECE.MOD_ID + "/sounds/gamestart.ogg");
             if (inputStream != null) {
                 try {
@@ -199,6 +196,7 @@ public abstract class MinecraftClientMixin extends ReentrantThreadExecutor<Runna
             } else {
                 LOGGER.warn("StartupSound not found, return null!");
             }
+
             this.openScreen(new StartupScreen((MinecraftClient) (Object) this, invoker.getResourceReloadMonitor(), invoker.getExceptionHandler()));
         }
     }

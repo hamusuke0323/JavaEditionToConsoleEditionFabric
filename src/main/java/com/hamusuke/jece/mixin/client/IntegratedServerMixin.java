@@ -9,8 +9,8 @@ import com.mojang.datafixers.DataFixer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
 import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.resource.ServerResourceManager;
@@ -59,7 +59,7 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
 
         if (!this.paused) {
             super.tick(shouldKeepTicking);
-            int i = Math.max(2, this.client.options.viewDistance + -1);
+            int i = Math.max(2, this.client.options.viewDistance - 1);
             if (i != this.getPlayerManager().getViewDistance()) {
                 LOGGER.info("Changing view distance to {}, from {}", i, this.getPlayerManager().getViewDistance());
                 this.getPlayerManager().setViewDistance(i);
@@ -77,9 +77,9 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
                     LOGGER.info("Autosave started");
                     profiler.push("autoSave");
                     this.getPlayerManager().sendToAll(new TitleS2CPacket(TitleS2CPacket.Action.ACTIONBAR, new TranslatableText("gui.autosave.start", 0)));
-                    this.getPlayerManager().sendToAll(ServerPlayNetworking.createS2CPacket(NetworkManager.AUTO_SAVE_WILL_START_PACKET_ID, PacketByteBufs.empty()));
+                    this.getPlayerManager().sendToAll(new CustomPayloadS2CPacket(NetworkManager.AUTO_SAVE_WILL_START_PACKET_ID, PacketByteBufs.empty()));
                     ((MinecraftServerInvoker) this).saveAll();
-                    this.getPlayerManager().sendToAll(ServerPlayNetworking.createS2CPacket(NetworkManager.AUTO_SAVE_END_PACKET_ID, PacketByteBufs.empty()));
+                    this.getPlayerManager().sendToAll(new CustomPayloadS2CPacket(NetworkManager.AUTO_SAVE_END_PACKET_ID, PacketByteBufs.empty()));
                     profiler.pop();
                     LOGGER.info("Autosave finished");
                 }

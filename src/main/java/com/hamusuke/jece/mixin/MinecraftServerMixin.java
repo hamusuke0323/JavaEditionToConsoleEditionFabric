@@ -6,9 +6,9 @@ import com.hamusuke.jece.network.NetworkManager;
 import com.hamusuke.jece.server.JECEServer;
 import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.boss.BossBarManager;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
@@ -149,9 +149,9 @@ public abstract class MinecraftServerMixin implements MinecraftServerInvoker {
                     LOGGER.info("Autosave started");
                     this.profiler.push("autoSave");
                     this.playerManager.sendToAll(new TitleS2CPacket(TitleS2CPacket.Action.ACTIONBAR, new TranslatableText("gui.autosave.start", 0)));
-                    this.playerManager.sendToAll(ServerPlayNetworking.createS2CPacket(NetworkManager.AUTO_SAVE_WILL_START_PACKET_ID, PacketByteBufs.empty()));
+                    this.playerManager.sendToAll(new CustomPayloadS2CPacket(NetworkManager.AUTO_SAVE_WILL_START_PACKET_ID, PacketByteBufs.empty()));
                     this.saveAll();
-                    this.playerManager.sendToAll(ServerPlayNetworking.createS2CPacket(NetworkManager.AUTO_SAVE_END_PACKET_ID, PacketByteBufs.empty()));
+                    this.playerManager.sendToAll(new CustomPayloadS2CPacket(NetworkManager.AUTO_SAVE_END_PACKET_ID, PacketByteBufs.empty()));
                     this.profiler.pop();
                     LOGGER.info("Autosave finished");
                 }
@@ -182,7 +182,7 @@ public abstract class MinecraftServerMixin implements MinecraftServerInvoker {
         packetByteBuf.writeText(text);
         packetByteBuf.writeFloat(progress);
         packetByteBuf.writeBoolean(this.isDedicated());
-        this.playerManager.sendToAll(ServerPlayNetworking.createS2CPacket(NetworkManager.AUTO_SAVE_PACKET_ID, packetByteBuf));
+        this.playerManager.sendToAll(new CustomPayloadS2CPacket(NetworkManager.AUTO_SAVE_PACKET_ID, packetByteBuf));
     }
 
     public void saveAll() {
@@ -233,7 +233,7 @@ public abstract class MinecraftServerMixin implements MinecraftServerInvoker {
         try {
             Thread.sleep(time);
             this.timeReference = Util.getMeasuringTimeMs() + 10L;
-        } catch (InterruptedException e) {
+        } catch (InterruptedException ignored) {
         }
     }
 }

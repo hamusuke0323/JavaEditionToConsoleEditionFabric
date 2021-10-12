@@ -96,7 +96,6 @@ public class StartupScreen extends Screen {
             TitleScreen titleScreen = new TitleScreen();
             titleScreen.init(this.mc, this.width, this.height);
             this.mc.openScreen(new SkippableMojangLogoAnd4JStudiosLogoScreen(titleScreen));
-            this.mc.currentScreen.init(this.mc, this.width, this.height);
         }
     }
 

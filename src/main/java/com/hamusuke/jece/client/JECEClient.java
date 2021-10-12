@@ -27,7 +27,8 @@ import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
+import java.io.File;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Environment(EnvType.CLIENT)
@@ -44,6 +45,10 @@ public class JECEClient implements ClientModInitializer {
     public static File jeceConfigDir;
     public static JECEOptions jeceOptions;
     public static final AtomicReference<JoystickWorker> joystickWorker = new AtomicReference<>();
+
+    public static Optional<JoystickWorker> getJoystickWorker() {
+        return Optional.ofNullable(joystickWorker.get());
+    }
 
     public void onInitializeClient() {
         jeceConfigDir = FabricLoader.getInstance().getConfigDir().resolve("jece").toFile();
@@ -93,33 +98,31 @@ public class JECEClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(NetworkManager.AUTO_SAVE_END_PACKET_ID, (client, handler, buf, responseSender) -> client.send(() -> client.openScreen(null)));
 
-        ClientLifecycleEvents.CLIENT_STOPPING.register((client) -> {
-            if (joystickWorker.get() != null) {
-                joystickWorker.get().close();
-            }
-        });
+        ClientLifecycleEvents.CLIENT_STOPPING.register(client -> getJoystickWorker().ifPresent(JoystickWorker::close));
 
         KeyboardInputTickEvent.EVENT.register((input, slowDown) -> {
-            MinecraftClient client = MinecraftClient.getInstance();
-            boolean forward = joystickWorker.get() != null && client.currentScreen == null && JoystickInputUtil.isStickForward(joystickWorker.get().getStickId());
-            boolean back = joystickWorker.get() != null && client.currentScreen == null && JoystickInputUtil.isStickBack(joystickWorker.get().getStickId());
-            boolean left = joystickWorker.get() != null && client.currentScreen == null && JoystickInputUtil.isStickLeft(joystickWorker.get().getStickId());
-            boolean right = joystickWorker.get() != null && client.currentScreen == null && JoystickInputUtil.isStickRight(joystickWorker.get().getStickId());
-            input.pressingForward = forward;
-            input.pressingBack = back;
-            input.pressingLeft = left;
-            input.pressingRight = right;
-            float y = joystickWorker.get() != null ? -JoystickInputUtil.getStickAxes(joystickWorker.get().getStickId(), 1) : 0.0F;
-            float x = joystickWorker.get() != null ? -JoystickInputUtil.getStickAxes(joystickWorker.get().getStickId(), 0) : 0.0F;
-            input.movementForward = forward ? y : back ? y : input.movementForward;
-            input.movementSideways = left ? x : right ? x : input.movementSideways;
-            input.jumping = client.options.keyJump.isPressed() || jeceOptions.keyJump.isPressed();
-            input.sneaking = client.options.keySneak.isPressed() || jeceOptions.keySneak.isPressed();
+            getJoystickWorker().ifPresent(joystickWorker -> {
+                MinecraftClient client = MinecraftClient.getInstance();
+                boolean forward = client.currentScreen == null && JoystickInputUtil.isStickForward(joystickWorker.getStickId());
+                boolean back = client.currentScreen == null && JoystickInputUtil.isStickBack(joystickWorker.getStickId());
+                boolean left = client.currentScreen == null && JoystickInputUtil.isStickLeft(joystickWorker.getStickId());
+                boolean right = client.currentScreen == null && JoystickInputUtil.isStickRight(joystickWorker.getStickId());
+                input.pressingForward = forward;
+                input.pressingBack = back;
+                input.pressingLeft = left;
+                input.pressingRight = right;
+                float y = -JoystickInputUtil.getStickAxes(joystickWorker.getStickId(), 1);
+                float x = -JoystickInputUtil.getStickAxes(joystickWorker.getStickId(), 0);
+                input.movementForward = forward ? y : back ? y : input.movementForward;
+                input.movementSideways = left ? x : right ? x : input.movementSideways;
+                input.jumping = client.options.keyJump.isPressed() || jeceOptions.keyJump.isPressed();
+                input.sneaking = client.options.keySneak.isPressed() || jeceOptions.keySneak.isPressed();
 
-            if (slowDown) {
-                input.movementSideways *= 0.3F;
-                input.movementForward *= 0.3F;
-            }
+                if (slowDown) {
+                    input.movementSideways *= 0.3F;
+                    input.movementForward *= 0.3F;
+                }
+            });
         });
     }
 }

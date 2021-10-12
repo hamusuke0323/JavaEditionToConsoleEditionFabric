@@ -4,7 +4,7 @@ import com.hamusuke.jece.invoker.client.SplashScreenInvoker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.SplashScreen;
-import net.minecraft.resource.ResourceReloadMonitor;
+import net.minecraft.resource.ResourceReload;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,14 +17,14 @@ import java.util.function.Consumer;
 public class SplashScreenMixin implements SplashScreenInvoker {
     @Shadow
     @Final
-    private ResourceReloadMonitor reloadMonitor;
+    private Consumer<Optional<Throwable>> exceptionHandler;
 
     @Shadow
     @Final
-    private Consumer<Optional<Throwable>> exceptionHandler;
+    private ResourceReload reload;
 
-    public ResourceReloadMonitor getResourceReloadMonitor() {
-        return this.reloadMonitor;
+    public ResourceReload getResourceReloadMonitor() {
+        return this.reload;
     }
 
     public Consumer<Optional<Throwable>> getExceptionHandler() {

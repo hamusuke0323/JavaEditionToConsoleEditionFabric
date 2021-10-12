@@ -1,11 +1,11 @@
 package com.hamusuke.jece.mixin.client;
 
+import com.hamusuke.jece.client.gui.screen.ConfirmScreenCE;
 import com.hamusuke.jece.client.gui.screen.HowToPlayAndOptionsScreen;
 import com.hamusuke.jece.client.jececomparator.JECEComparators;
-import com.hamusuke.jece.client.gui.screen.ConfirmScreenCE;
+import com.hamusuke.jece.client.util.CEUtil;
 import com.hamusuke.jece.invoker.client.MinecraftClientInvoker;
 import com.hamusuke.jece.invoker.client.ScreenInvoker;
-import com.hamusuke.jece.client.util.CEUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -115,7 +115,7 @@ public abstract class TitleScreenMixin extends Screen {
                 float h = 1.8F - MathHelper.abs(MathHelper.sin((float) (Util.getMeasuringTimeMs() % 1000L) / 1000.0F * 6.2831855F) * 0.1F);
                 h = h * 100.0F / (float) (this.textRenderer.getWidth(this.splashText) + 32);
                 RenderSystem.scalef(h, h, h);
-                drawCenteredString(matrices, this.textRenderer, this.splashText, 0, -8, 16776960);
+                drawCenteredText(matrices, this.textRenderer, this.splashText, 0, -8, 16776960);
                 RenderSystem.popMatrix();
             }
 

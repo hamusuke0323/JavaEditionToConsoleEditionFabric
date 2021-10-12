@@ -222,7 +222,7 @@ public abstract class MinecraftServerMixin implements MinecraftServerInvoker {
         ServerWorld serverWorld2 = this.getOverworld();
         ServerWorldProperties serverWorldProperties = this.saveProperties.getMainWorldProperties();
         serverWorldProperties.setWorldBorder(serverWorld2.getWorldBorder().write());
-        this.saveProperties.setCustomBossEvents(this.bossBarManager.toTag());
+        this.saveProperties.setCustomBossEvents(this.bossBarManager.toNbt());
         this.session.backupLevelDataFile(this.registryManager, this.saveProperties, this.playerManager.getUserData());
 
         this.sendToAll(new TranslatableText("menu.savelevel.finally"), 0.0F);

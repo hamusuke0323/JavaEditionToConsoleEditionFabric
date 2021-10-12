@@ -4,8 +4,8 @@ import com.hamusuke.jece.client.JECEClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.options.BooleanOption;
-import net.minecraft.client.options.CyclingOption;
+import net.minecraft.client.option.BooleanOption;
+import net.minecraft.client.option.CyclingOption;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 

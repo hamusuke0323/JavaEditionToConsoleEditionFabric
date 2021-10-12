@@ -6,11 +6,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenTexts;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.options.GameOptions;
-import net.minecraft.client.options.Option;
+import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.option.GameOptions;
+import net.minecraft.client.option.Option;
 import net.minecraft.client.util.OrderableTooltip;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
@@ -37,12 +37,12 @@ public class JECESettingsScreen extends Screen {
         this.buttonListWidget = new ButtonListWidget(this.client, this.width, this.height, 20, this.height - 20, 25);
         this.buttonListWidget.addAll(OPTIONS);
         this.buttonListWidget.addSingleOptionEntry(new Option("jece.switcher.screen") {
-            public AbstractButtonWidget createButton(GameOptions options, int x, int y, int width) {
+            public ClickableWidget createButton(GameOptions options, int x, int y, int width) {
                 return new ButtonWidget(x, y, width, 20, this.getDisplayPrefix(), (button) -> JECESettingsScreen.this.client.openScreen(new JECESwitcherScreen(JECESettingsScreen.this)));
             }
         });
         this.buttonListWidget.addSingleOptionEntry(new Option("controls.title") {
-            public AbstractButtonWidget createButton(GameOptions options, int x, int y, int width) {
+            public ClickableWidget createButton(GameOptions options, int x, int y, int width) {
                 return new ButtonWidget(x, y, width, 20, this.getDisplayPrefix(), (button) -> JECESettingsScreen.this.client.openScreen(new ControlsOptionsScreen(JECESettingsScreen.this)));
             }
         });
@@ -70,7 +70,7 @@ public class JECESettingsScreen extends Screen {
 
     @Nullable
     private List<OrderedText> getHoveredButtonTooltip(int mouseX, int mouseY) {
-        Optional<AbstractButtonWidget> optional = this.buttonListWidget.getHoveredButton(mouseX, mouseY);
+        Optional<ClickableWidget> optional = this.buttonListWidget.getHoveredButton(mouseX, mouseY);
         if (optional.isPresent() && optional.get() instanceof OrderableTooltip) {
             Optional<List<OrderedText>> optional2 = ((OrderableTooltip) optional.get()).getOrderedTooltip();
             return optional2.orElse(null);

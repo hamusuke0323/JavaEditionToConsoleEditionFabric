@@ -1,11 +1,11 @@
 package com.hamusuke.jece.mixin.client;
 
 import com.hamusuke.jece.client.JECEClient;
-import com.hamusuke.jece.invoker.client.AbstractButtonWidgetInvoker;
+import com.hamusuke.jece.invoker.client.ClickableWidgetInvoker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.client.util.math.MatrixStack;
@@ -19,9 +19,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(AbstractButtonWidget.class)
+@Mixin(ClickableWidget.class)
 @Environment(EnvType.CLIENT)
-public class AbstractButtonWidgetMixin implements AbstractButtonWidgetInvoker {
+public class ClickableWidgetMixin implements ClickableWidgetInvoker {
     @Shadow
     private Text message;
 
@@ -30,7 +30,7 @@ public class AbstractButtonWidgetMixin implements AbstractButtonWidgetInvoker {
     @Nullable
     private SoundEvent onPressSound;
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/AbstractButtonWidget;queueNarration(I)V"))
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/ClickableWidget;queueNarration(I)V"))
     private void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (this.active) {
             MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(JECEClient.UI_BUTTON_HOVER, 1.0F));
@@ -53,9 +53,9 @@ public class AbstractButtonWidgetMixin implements AbstractButtonWidgetInvoker {
         }
     }
 
-    public AbstractButtonWidget setOnPressSound(@Nullable SoundEvent onPressSound) {
+    public ClickableWidget setOnPressSound(@Nullable SoundEvent onPressSound) {
         this.onPressSound = onPressSound;
-        return (AbstractButtonWidget) (Object) this;
+        return (ClickableWidget) (Object) this;
     }
 
     @Nullable

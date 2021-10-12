@@ -37,7 +37,7 @@ public abstract class ServerWorldMixin extends World implements ServerWorldInvok
 
     public void saveLevel() {
         if (this.enderDragonFight != null) {
-            this.server.getSaveProperties().setDragonFight(this.enderDragonFight.toTag());
+            this.server.getSaveProperties().setDragonFight(this.enderDragonFight.toNbt());
         }
 
         this.getChunkManager().getPersistentStateManager().save();

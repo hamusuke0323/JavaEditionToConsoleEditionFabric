@@ -1,10 +1,11 @@
 package com.hamusuke.jece.mixin.client;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
 import com.google.gson.JsonParseException;
+import com.hamusuke.jece.client.util.CEUtil;
 import com.hamusuke.jece.invoker.client.ItemInvoker;
 import com.hamusuke.jece.invoker.client.ItemStackInvoker;
-import com.hamusuke.jece.client.util.CEUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -19,8 +20,8 @@ import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Rarity;
@@ -34,7 +35,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 @Mixin(ItemStack.class)
 @Environment(EnvType.CLIENT)
@@ -55,18 +58,15 @@ public abstract class ItemStackMixin implements ItemStackInvoker {
     protected abstract int getHideFlags();
 
     @Shadow
-    private static boolean isSectionHidden(int flags, ItemStack.TooltipSection tooltipSection) {
-        return false;
-    }
-
-    @Shadow
     public abstract boolean hasTag();
 
     @Shadow
-    public abstract ListTag getEnchantments();
+    private NbtCompound tag;
 
     @Shadow
-    private CompoundTag tag;
+    private static boolean isSectionVisible(int flags, ItemStack.TooltipSection tooltipSection) {
+        return false;
+    }
 
     @Shadow
     @Final
@@ -93,6 +93,9 @@ public abstract class ItemStackMixin implements ItemStackInvoker {
     @Shadow
     public abstract int getDamage();
 
+    @Shadow
+    public abstract NbtList getEnchantments();
+
     public List<Text> getHandedTooltip(@Nullable PlayerEntity playerEntity, TooltipContext tooltipContext) {
         return this.addTooltip(playerEntity, tooltipContext, true);
     }
@@ -116,31 +119,31 @@ public abstract class ItemStackMixin implements ItemStackInvoker {
         }
 
         int i = this.getHideFlags();
-        if (isSectionHidden(i, ItemStack.TooltipSection.ADDITIONAL)) {
+        if (isSectionVisible(i, ItemStack.TooltipSection.ADDITIONAL)) {
             this.getItem().appendTooltip((ItemStack) (Object) this, player == null ? null : player.world, list, context);
         }
 
         int j;
         if (this.hasTag()) {
-            if (isSectionHidden(i, ItemStack.TooltipSection.ENCHANTMENTS)) {
+            if (isSectionVisible(i, ItemStack.TooltipSection.ENCHANTMENTS)) {
                 ItemStack.appendEnchantments(list, this.getEnchantments());
             }
 
             if (this.tag.contains("display", 10)) {
-                CompoundTag compoundTag = this.tag.getCompound("display");
-                if (isSectionHidden(i, ItemStack.TooltipSection.DYE) && compoundTag.contains("color", 99)) {
+                NbtCompound nbtCompound = this.tag.getCompound("display");
+                if (isSectionVisible(i, ItemStack.TooltipSection.DYE) && nbtCompound.contains("color", 99)) {
                     if (context.isAdvanced()) {
-                        list.add((new TranslatableText("item.color", String.format("#%06X", compoundTag.getInt("color")))).formatted(Formatting.WHITE));
+                        list.add((new TranslatableText("item.color", String.format("#%06X", nbtCompound.getInt("color")))).formatted(Formatting.WHITE));
                     } else {
                         list.add((new TranslatableText("item.dyed")).formatted(Formatting.WHITE, Formatting.ITALIC));
                     }
                 }
 
-                if (compoundTag.getType("Lore") == 9) {
-                    ListTag listTag = compoundTag.getList("Lore", 8);
+                if (nbtCompound.getType("Lore") == 9) {
+                    NbtList nbtList = nbtCompound.getList("Lore", 8);
 
-                    for (j = 0; j < listTag.size(); ++j) {
-                        String string = listTag.getString(j);
+                    for (j = 0; j < nbtList.size(); ++j) {
+                        String string = nbtList.getString(j);
 
                         try {
                             MutableText mutableText2 = Text.Serializer.fromJson(string);
@@ -148,7 +151,7 @@ public abstract class ItemStackMixin implements ItemStackInvoker {
                                 list.add(Texts.setStyleIfAbsent(mutableText2, LORE_STYLE));
                             }
                         } catch (JsonParseException var19) {
-                            compoundTag.remove("Lore");
+                            nbtCompound.remove("Lore");
                         }
                     }
                 }
@@ -156,7 +159,7 @@ public abstract class ItemStackMixin implements ItemStackInvoker {
         }
 
         int l;
-        if (isSectionHidden(i, ItemStack.TooltipSection.MODIFIERS)) {
+        if (isSectionVisible(i, ItemStack.TooltipSection.MODIFIERS)) {
             EquipmentSlot[] var20 = EquipmentSlot.values();
             l = var20.length;
 
@@ -206,31 +209,31 @@ public abstract class ItemStackMixin implements ItemStackInvoker {
         }
 
         if (this.hasTag()) {
-            if (isSectionHidden(i, ItemStack.TooltipSection.UNBREAKABLE) && this.tag.getBoolean("Unbreakable")) {
+            if (isSectionVisible(i, ItemStack.TooltipSection.UNBREAKABLE) && this.tag.getBoolean("Unbreakable")) {
                 list.add((new TranslatableText("item.unbreakable")).formatted(Formatting.WHITE));
             }
 
-            ListTag listTag3;
-            if (isSectionHidden(i, ItemStack.TooltipSection.CAN_DESTROY) && this.tag.contains("CanDestroy", 9)) {
-                listTag3 = this.tag.getList("CanDestroy", 8);
-                if (!listTag3.isEmpty()) {
+            NbtList nbtList3;
+            if (isSectionVisible(i, ItemStack.TooltipSection.CAN_DESTROY) && this.tag.contains("CanDestroy", 9)) {
+                nbtList3 = this.tag.getList("CanDestroy", 8);
+                if (!nbtList3.isEmpty()) {
                     list.add(LiteralText.EMPTY);
                     list.add((new TranslatableText("item.canBreak")).formatted(Formatting.WHITE));
 
-                    for (l = 0; l < listTag3.size(); ++l) {
-                        list.addAll(parseBlockTag(listTag3.getString(l)));
+                    for (l = 0; l < nbtList3.size(); ++l) {
+                        list.addAll(parseBlockTag(nbtList3.getString(l)));
                     }
                 }
             }
 
-            if (isSectionHidden(i, ItemStack.TooltipSection.CAN_PLACE) && this.tag.contains("CanPlaceOn", 9)) {
-                listTag3 = this.tag.getList("CanPlaceOn", 8);
-                if (!listTag3.isEmpty()) {
+            if (isSectionVisible(i, ItemStack.TooltipSection.CAN_PLACE) && this.tag.contains("CanPlaceOn", 9)) {
+                nbtList3 = this.tag.getList("CanPlaceOn", 8);
+                if (!nbtList3.isEmpty()) {
                     list.add(LiteralText.EMPTY);
                     list.add((new TranslatableText("item.canPlace")).formatted(Formatting.WHITE));
 
-                    for (l = 0; l < listTag3.size(); ++l) {
-                        list.addAll(parseBlockTag(listTag3.getString(l)));
+                    for (l = 0; l < nbtList3.size(); ++l) {
+                        list.addAll(parseBlockTag(nbtList3.getString(l)));
                     }
                 }
             }

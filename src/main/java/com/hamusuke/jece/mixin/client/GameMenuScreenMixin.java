@@ -5,12 +5,15 @@ import com.hamusuke.jece.client.gui.screen.ConfirmScreenCE;
 import com.hamusuke.jece.client.gui.screen.HowToPlayAndOptionsScreen;
 import com.hamusuke.jece.client.gui.screen.SaveScreen;
 import com.hamusuke.jece.invoker.MinecraftServerInvoker;
-import com.hamusuke.jece.invoker.client.AbstractButtonWidgetInvoker;
 import com.hamusuke.jece.invoker.client.AdvancementsScreenInvoker;
+import com.hamusuke.jece.invoker.client.ClickableWidgetInvoker;
 import com.hamusuke.jece.invoker.client.ScreenInvoker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.*;
+import net.minecraft.client.gui.screen.GameMenuScreen;
+import net.minecraft.client.gui.screen.SaveLevelScreen;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.advancement.AdvancementsScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -40,7 +43,7 @@ public abstract class GameMenuScreenMixin extends Screen {
     @Inject(method = "init", at = @At("HEAD"), cancellable = true)
     protected void init(CallbackInfo ci) {
         if (this.showMenu) {
-            this.addButton(((AbstractButtonWidgetInvoker) new ButtonWidget(this.width / 2 - 102, this.height / 4 + 48 + -16, 204, 20, new TranslatableText("menu.returnToGame"), (buttonWidget) -> {
+            this.addButton(((ClickableWidgetInvoker) new ButtonWidget(this.width / 2 - 102, this.height / 4 + 48 + -16, 204, 20, new TranslatableText("menu.returnToGame"), (buttonWidget) -> {
                 this.client.openScreen(null);
                 this.client.mouse.lockCursor();
             })).setOnPressSound(JECEClient.UI_BACKBUTTON_CLICK));

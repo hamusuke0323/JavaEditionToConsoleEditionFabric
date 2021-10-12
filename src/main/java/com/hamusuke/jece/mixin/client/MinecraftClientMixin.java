@@ -27,9 +27,9 @@ import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.screen.multiplayer.SocialInteractionsScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.client.options.ChatVisibility;
-import net.minecraft.client.options.GameOptions;
-import net.minecraft.client.options.Perspective;
+import net.minecraft.client.option.ChatVisibility;
+import net.minecraft.client.option.GameOptions;
+import net.minecraft.client.option.Perspective;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -234,13 +234,13 @@ public abstract class MinecraftClientMixin extends ReentrantThreadExecutor<Runna
         ci.cancel();
     }
 
-    @Inject(method = "method_29607", at = @At("HEAD"))
-    private void method_29607H(String worldName, LevelInfo levelInfo, DynamicRegistryManager.Impl registryTracker, GeneratorOptions generatorOptions, CallbackInfo ci) {
+    @Inject(method = "createWorld", at = @At("HEAD"))
+    private void createWorldH(String worldName, LevelInfo levelInfo, DynamicRegistryManager.Impl registryTracker, GeneratorOptions generatorOptions, CallbackInfo ci) {
         this.isCreateWorld = true;
     }
 
-    @Inject(method = "method_29607", at = @At("RETURN"))
-    private void method_29607R(String worldName, LevelInfo levelInfo, DynamicRegistryManager.Impl registryTracker, GeneratorOptions generatorOptions, CallbackInfo ci) {
+    @Inject(method = "createWorld", at = @At("RETURN"))
+    private void createWorldR(String worldName, LevelInfo levelInfo, DynamicRegistryManager.Impl registryTracker, GeneratorOptions generatorOptions, CallbackInfo ci) {
         this.isCreateWorld = false;
     }
 

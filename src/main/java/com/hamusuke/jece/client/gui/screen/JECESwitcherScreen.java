@@ -1,17 +1,17 @@
 package com.hamusuke.jece.client.gui.screen;
 
 import com.google.common.collect.Lists;
-import com.hamusuke.jece.invoker.client.ScreenInvoker;
 import com.hamusuke.jece.client.jececomparator.JECEComparator;
 import com.hamusuke.jece.client.jececomparator.JECEComparators;
+import com.hamusuke.jece.invoker.client.ScreenInvoker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenTexts;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.TranslatableText;
@@ -89,7 +89,7 @@ public class JECESwitcherScreen extends Screen {
 
         @Environment(EnvType.CLIENT)
         class SwitcherEntry extends ElementListWidget.Entry<SwitcherEntry> {
-            private final List<AbstractButtonWidget> buttons = Lists.newArrayList();
+            private final List<ClickableWidget> buttons = Lists.newArrayList();
             private final JECEComparator jeceComparator;
             private ButtonWidget useJE;
             private ButtonWidget useCE;
@@ -115,7 +115,7 @@ public class JECESwitcherScreen extends Screen {
                 this.useCE.active = !this.useJE.active;
             }
 
-            private <T extends AbstractButtonWidget> T addButton(T button) {
+            private <T extends ClickableWidget> T addButton(T button) {
                 this.buttons.add(button);
                 return button;
             }
@@ -127,7 +127,7 @@ public class JECESwitcherScreen extends Screen {
                 this.useCE.x = x + entryWidth / 2;
                 this.useJE.y = this.useCE.y = y + entryHeight - 20;
 
-                for (AbstractButtonWidget abstractButtonWidget : this.buttons) {
+                for (ClickableWidget abstractButtonWidget : this.buttons) {
                     abstractButtonWidget.render(matrices, mouseX, mouseY, tickDelta);
                 }
             }

@@ -15,7 +15,7 @@ import net.minecraft.client.texture.ResourceTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.resource.DefaultResourcePack;
 import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceReloadMonitor;
+import net.minecraft.resource.ResourceReload;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 @Environment(EnvType.CLIENT)
 public class StartupScreen extends Screen {
     private final MinecraftClient mc;
-    private final ResourceReloadMonitor reloadMonitor;
+    private final ResourceReload reloadMonitor;
     private final Consumer<Optional<Throwable>> exceptionHandler;
     private float progress;
     private float fadeout;
@@ -37,7 +37,7 @@ public class StartupScreen extends Screen {
     private static final Identifier FourJSTUDIOS = new Identifier(JECE.MOD_ID, "textures/gui/title/startupframes/4jstudios.png");
     private int counter = 1;
 
-    public StartupScreen(MinecraftClient mc, ResourceReloadMonitor monitor, Consumer<Optional<Throwable>> exceptionHandler) {
+    public StartupScreen(MinecraftClient mc, ResourceReload monitor, Consumer<Optional<Throwable>> exceptionHandler) {
         super(LiteralText.EMPTY);
         this.mc = mc;
         this.reloadMonitor = monitor;
@@ -78,9 +78,9 @@ public class StartupScreen extends Screen {
             this.fadeout -= 0.5F;
         }
 
-        if (this.reloadMonitor.isApplyStageComplete()) {
+        if (this.reloadMonitor.isPrepareStageComplete()) {
             try {
-                this.reloadMonitor.throwExceptions();
+                this.reloadMonitor.throwException();
                 this.exceptionHandler.accept(Optional.empty());
             } catch (Throwable throwable) {
                 this.exceptionHandler.accept(Optional.of(throwable));

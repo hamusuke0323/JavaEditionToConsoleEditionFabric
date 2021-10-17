@@ -1,12 +1,10 @@
 package com.hamusuke.jece.mixin.client;
 
-import com.hamusuke.jece.client.JECEClient;
 import com.hamusuke.jece.invoker.client.AdvancementsScreenInvoker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.advancement.AdvancementsScreen;
-import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -40,7 +38,6 @@ public class AdvancementsScreenMixin extends Screen implements AdvancementsScree
     }
 
     public void onClose() {
-        this.client.getSoundManager().play(PositionedSoundInstance.master(JECEClient.UI_BACKBUTTON_CLICK, 1.0F));
         this.client.openScreen(this.parent);
     }
 }

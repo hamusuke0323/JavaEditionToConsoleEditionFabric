@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 @Environment(EnvType.CLIENT)
 public class StartupScreen extends Screen {
     private final MinecraftClient mc;
-    private final ResourceReload reloadMonitor;
+    private final ResourceReload reload;
     private final Consumer<Optional<Throwable>> exceptionHandler;
     private float progress;
     private float fadeout;
@@ -40,7 +40,7 @@ public class StartupScreen extends Screen {
     public StartupScreen(MinecraftClient mc, ResourceReload monitor, Consumer<Optional<Throwable>> exceptionHandler) {
         super(LiteralText.EMPTY);
         this.mc = mc;
-        this.reloadMonitor = monitor;
+        this.reload = monitor;
         this.exceptionHandler = exceptionHandler;
     }
 
@@ -68,7 +68,7 @@ public class StartupScreen extends Screen {
 
         super.render(matrices, mouseX, mouseY, delta);
 
-        float f3 = this.reloadMonitor.getProgress();
+        float f3 = this.reload.getProgress();
         this.progress = MathHelper.clamp(this.progress * 0.95F + f3 * 0.050000012F, 0.0F, 1.0F);
 
         if (this.progress >= 0.95F) {
@@ -78,9 +78,9 @@ public class StartupScreen extends Screen {
             this.fadeout -= 0.5F;
         }
 
-        if (this.reloadMonitor.isPrepareStageComplete()) {
+        if (this.reload.isComplete()) {
             try {
-                this.reloadMonitor.throwException();
+                this.reload.throwException();
                 this.exceptionHandler.accept(Optional.empty());
             } catch (Throwable throwable) {
                 this.exceptionHandler.accept(Optional.of(throwable));

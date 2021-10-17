@@ -15,7 +15,8 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.ParentElement;
 import net.minecraft.client.gui.hud.BackgroundHelper;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
@@ -221,6 +222,11 @@ public abstract class ScreenMixin extends DrawableHelper implements ScreenInvoke
             cir.setReturnValue(true);
             cir.cancel();
         }
+    }
+
+    @Inject(method = "keyPressed", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;onClose()V", shift = At.Shift.BEFORE))
+    private void keyPressed$onClose(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        this.client.getSoundManager().play(PositionedSoundInstance.master(JECEClient.UI_BACKBUTTON_CLICK, 1.0F));
     }
 
     public boolean joystickButtonPressed(int key) {
